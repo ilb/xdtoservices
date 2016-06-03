@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    xmlns:tns="urn:ru:ilb:xdtoservices:xdtoservices"
+    xmlns:uuid="urn:ru:ilb:basicuuid:basicuuid"
+>
+	 
+    <doc title="xdtoservices API">
+        xdtoservices API
+    </doc>
+    <grammars>
+        <include href="xdtoservices.xsd" />
+    </grammars>
+	
+    <resources base="http://localhost:8080/xdtoservices/web">
+        <resource path="catalogs">
+            <resource path="{catalogName}">
+                <param name="catalogName" type="xsd:string" style="template">
+                    <doc>catalog name</doc>
+                </param>
+                <method name="GET" id="getCatalog">
+                    <doc>get catalog contents</doc>
+                    <response status="200">
+                        <representation mediaType="application/xml" />
+                    </response>
+                </method>
+                <method name="POST" id="createCatalogObject">
+                    <doc>create new document instance</doc>
+                    <request>
+                        <representation mediaType="application/xml" />
+                    </request>
+                    <response>
+                        <representation mediaType="text/plain" element="uuid:UUIDType">
+                            <doc>UUID of created object</doc>
+                        </representation>
+                    </response>
+                </method>
+                <resource path="{uid}">
+                    <param name="uid" type="uuid:UUIDType" style="template">
+                        <doc>catalog item uid</doc>
+                    </param>
+                    <method name="GET" id="getCatalogObject">
+                        <doc>get catalog item by uid</doc>
+                        <response status="200">
+                            <representation mediaType="application/xml" />
+                        </response>
+                    </method>
+                </resource>                
+            </resource>
+        </resource>
+        <resource path="documents">
+            <doc>
+                documents resource
+            </doc>
+            <method name="GET" id="list">
+                <doc>List of documents</doc>
+                <response status="200">
+                    <representation mediaType="application/xml"/>
+                </response>
+            </method>
+            <method name="POST" id="create">
+                <doc>create new document instance</doc>
+                <request>
+                    <representation mediaType="application/xml" />
+                </request>
+                <response>
+                    <representation mediaType="text/plain" element="uuid:UUIDType">
+                        <doc>UUID of created object</doc>
+                    </representation>
+                </response>
+            </method>
+            <resource path="{uid}">
+                <param name="uid" type="uuid:UUIDType" style="template">
+                    <doc>document uid</doc>
+                </param>
+                <method name="GET" id="find">
+                    <doc>get document instance</doc>
+                    <response status="200">
+                        <representation mediaType="application/xml" />
+                    </response>
+                </method>
+                <method name="PUT" id="edit">
+                    <doc>edit document instance</doc>
+                    <request>
+                        <representation mediaType="application/xml" />
+                    </request>
+                    <response status="204"/>
+                </method>
+                <method name="DELETE" id="remove">
+                    <doc>remove document instance</doc>
+                    <response status="204"/>
+                </method>
+            </resource>
+        </resource>
+    </resources>
+</application> 

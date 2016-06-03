@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+       xmlns:jaxrs-client="http://cxf.apache.org/jaxrs-client"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+        http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd
+        http://cxf.apache.org/jaxrs-client http://cxf.apache.org/schemas/jaxrs-client.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd" xmlns:aop="http://www.springframework.org/schema/aop">
+
+    <!-- Load defaults from apache cxf -->
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <!--This switches on the load-time weaving for  @Transactional (in case of mode="aspectj"), @Configurable annotated classes -->
+    <context:load-time-weaver/>
+    <!-- This switches on resolving System properties and JNDI resources in strings like ${propname} -->
+    <context:property-placeholder />
+    <!--Activates @Required, @Autowired, @PostConstruct, @PreDestroy and @Resource -->
+    <context:annotation-config/>
+    <!--Activates @Configurable -->
+    <context:spring-configured/>
+    
+    <!-- uncomment to enable AsyncTaskManager support -->
+    <!--<bean id="asyncTaskManager" class="ru.ilb.common.jaxrs.async.AsyncTaskManager" destroy-method="destroy"/>-->
+
+    <!-- Configure swagger api support, see also jaxrs:features section in jaxrs:server and maven dependencies
+    <bean id="swagger2Feature" class="org.apache.cxf.jaxrs.swagger.Swagger2Feature">
+        <property name="resourcePackage" value="ru.ilb.xdtoservices.web"/>
+        <property name="scanAllResources" value="true"/>
+        <property name="dynamicBasePath" value="true"/>
+        <property name="replaceTags" value="true"/>
+        <property name="prettyPrint" value="true"/>
+    </bean>-->
+
+    <!-- Configure xslt support, see also web.xml for refreshTemplates env-entry
+    <bean id="uriResolver" class="ru.ilb.common.jaxrs.xml.transform.ServletContextURIResolver"/>
+    <bean id="xsltProvider" class="org.apache.cxf.jaxrs.provider.XSLTJaxbProvider" >
+        <property name="resolver" ref="uriResolver"/>
+        <property name="produceMediaTypes" value="application/xml,application/*+xml,text/xml,text/html,text/csv"/>
+        <property name="refreshTemplates">
+            <jee:jndi-lookup jndi-name="java:/comp/env/refreshTemplates" />
+        </property>
+    </bean>
+    -->
+    <bean id="searchContextProvider" class="org.apache.cxf.jaxrs.ext.search.SearchContextProvider"/>
+
+    <util:map id="namespaceMap" map-class="java.util.Hashtable">
+        <entry key="urn:ru:ilb:xdtoservices:xdtoservices" value="xdto"/>
+    </util:map>
+    <bean id="jaxbContextResolver" class="ru.ilb.common.jaxrs.jaxb.JaxbContextResolver" >
+<!--        <property name="contextProperties" ref="contextProperties"/>
+        <property name="extraClass" ref="extraClass"/>-->
+    </bean>
+
+    <!-- Both jaxbProvider and jsonProvider should be configured identically -->
+    <bean id="jaxbProvider" class="org.apache.cxf.jaxrs.provider.JAXBElementProvider">
+        <property name="namespacePrefixes" ref="namespaceMap"/>
+        <property name="marshallerProperties" ref="marshallerProperties"/>
+        <property name="singleJaxbContext" value="true"/>
+        <!--<property name="schemaHandler" ref="schemaHandler"/>-->
+    </bean>
+    <!--    <bean id="jsonProvider" class="org.apache.cxf.jaxrs.provider.json.JSONProvider">
+        <property name="namespaceMap" ref="namespaceMap"/>
+        <property name="contextProperties" ref="contextProperties"/>
+        <property name="namespaceSeparator" value=":"/>
+        <property name="singleJaxbContext" value="true"/>
+        <property name="schemaHandler" ref="schemaHandler"/>
+    </bean>-->
+    <bean id="jsonProvider" class="ru.ilb.common.jaxrs.json.MOXyJsonProvider">
+        <property name="namespacePrefixMapper" ref="namespaceMap"/>
+        <property name="namespaceSeparator" value=":"/>
+        <property name="formattedOutput" value="true"/>
+        <property name="attributePrefix" value="@"/>
+        <property name="includeRoot" value="true"/>
+        <property name="marshalEmptyCollections" value="false"/>
+        <!--<property name="schemaHandler" ref="schemaHandler"/>-->
+    </bean>
+<!--    <bean id="schemaHandler" class="org.apache.cxf.jaxrs.utils.schemas.SchemaHandler">
+        <property name="catalogLocation" value="classpath:schemas/xdtoservices/catalog.xml"/>
+        <property name="schemaLocations" ref="schemaLocations"/>
+    </bean>-->
+    <util:list id="schemaLocations">
+        <value>classpath:schemas/xdtoservices/xdtoservices.xsd</value>
+    </util:list>
+<!--    <util:list id="extraClass" value-type="java.lang.Class">
+    </util:list>-->
+
+    <util:map id="marshallerProperties">
+        <entry key="jaxb.formatted.output" value="true" value-type="java.lang.Boolean"/>
+    </util:map>
+    <util:map id="contextProperties">
+        <entry key="eclipselink-oxm-xml" value="schemas/xdtoservices/xdtoservices-oxm.xml"/>
+        <entry key="com.sun.xml.bind.XmlAccessorFactory" value="true" value-type="java.lang.Boolean"/>
+    </util:map>
+
+
+    <!-- Configure param converters for jaxrs:server and jaxrs:client -->
+    <util:map id="mapParamConverters">
+        <entry key="java.util.Date" value="ru.ilb.common.jaxrs.converters.DateParamConverter" value-type=""/>
+    </util:map>
+    <bean id="mapParamConverterProvider" class="ru.ilb.common.jaxrs.providers.MapParamConverterProvider">
+        <property name="converters" ref="mapParamConverters"/>
+    </bean>
+    <!-- Provider to mail fatal errors to server admin -->
+    <bean id="exceptionHandler" class="ru.ilb.common.jaxrs.exceptionhandler.SendMailExceptionHandler">
+        <property name="mailTo" value="${SERVER_ADMIN}"/>
+    </bean>
+
+    <!-- auto register @Component annotated classes -->
+    <context:component-scan base-package="ru.ilb.xdtoservices.web,ru.ilb.xdtoservices.core"/>
+    <jaxrs:server address="/" basePackages="ru.ilb.xdtoservices.web,ru.ilb.common.jaxrs.providers,ru.ilb.common.jaxrs.exceptionhandler">
+        <jaxrs:providers>
+            <ref bean="jaxbContextResolver"/>
+            <ref bean="jaxbProvider"/>
+            <ref bean="jsonProvider"/>
+            <ref bean="searchContextProvider"/>
+            <ref bean="mapParamConverterProvider"/>
+            <ref bean="exceptionHandler"/>
+        </jaxrs:providers>
+        <jaxrs:features>
+            <!-- uncomment for swagger api support
+            <ref bean="swagger2Feature" />
+            -->
+        </jaxrs:features>
+        <jaxrs:extensionMappings>
+            <entry key="xml" value="application/xml;charset=UTF-8"/>
+            <entry key="json" value="application/json;charset=UTF-8"/>
+        </jaxrs:extensionMappings>
+    </jaxrs:server>
+</beans>

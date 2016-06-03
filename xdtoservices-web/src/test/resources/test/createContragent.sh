@@ -1,0 +1,1 @@
+curl -v -X POST -H "Content-Type: application/xml" -u ide:123 -d @createContragent.xml -o createContragent.txt http://localhost:8080/xdtoservices-web/web/catalogs/%D0%BC%D1%84%D0%BE%D0%9A%D0%BE%D0%BD%D1%82%D1%80%D0%B0%D0%B3%D0%B5%D0%BD%D1%82%D1%8B
