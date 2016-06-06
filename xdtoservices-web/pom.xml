@@ -130,6 +130,11 @@
             <version>${org.springframework.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+        <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib-nodep</artifactId>
             <version>3.1</version>
@@ -148,6 +153,11 @@
             <groupId>org.ipc.octitbit</groupId>
             <artifactId>octitbit</artifactId>
             <version>0.6.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
         </dependency>
         <dependency>
             <groupId>javax</groupId>

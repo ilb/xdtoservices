@@ -52,6 +52,14 @@
                         </representation>
                     </response>
                 </method>
+                <resource path="template">
+                    <method name="GET" id="getCatalogObjectTemplate">
+                        <doc>get catalog item by uid</doc>
+                        <response status="200">
+                            <representation mediaType="application/xml" />
+                        </response>
+                    </method>
+                </resource>
                 <resource path="{uid}">
                     <param name="uid" type="uuid:UUIDType" style="template">
                         <doc>catalog item uid</doc>
