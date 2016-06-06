@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import ru.ilb.xdtoservices.api.CatalogsResource;
 import ru.ilb.xdtoservices.core.OCApplicationPool;
+import ru.ilb.xdtoservices.core.XmlMergeImpl;
 
 @Path("catalogs")
 public class CatalogsResourceImpl implements CatalogsResource {
@@ -44,6 +45,8 @@ public class CatalogsResourceImpl implements CatalogsResource {
     OCApplicationPool applicationPool;
     
     @Autowired CatalogsResourceIntr catalogsResourceIntr;
+    
+    @Autowired XmlMergeImpl xmlMergeImpl;
 
     @Override
     public String getCatalog(String catalogName) {
@@ -88,7 +91,10 @@ public class CatalogsResourceImpl implements CatalogsResource {
             writer.setString("UTF-8");
 
             serializer.writeXML(writer, catalogObject);
-            return writer.close();
+            
+            String result=writer.close();
+            
+            return result;
 
         } catch (JIAutomationException ex) {
             throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
@@ -123,9 +129,12 @@ public class CatalogsResourceImpl implements CatalogsResource {
     public UUID createCatalogObject(String catalogName, String string) {
         try {
             OCApp app = applicationPool.getApplication();
+            String baseXml=getCatalogObjectTemplate(catalogName);
+            String patchedXml=xmlMergeImpl.mergeXml(baseXml, string);
+            
             OCXDTOSerializer serializer = app.getXDTOSerializer();
             OCXMLReader reader = app.newXMLReader();
-            reader.setString(string);
+            reader.setString(patchedXml);
             
 //            OCXDTOFactory factory=app.getXDTOFactory();
 //            OCXDTOObjectType type=factory.createObjectType(factory.getCurrentConfigURI(), "CatalogObject."+ catalogName);
