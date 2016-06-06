@@ -17,11 +17,15 @@ package ru.ilb.xdtoservices.web;
 
 import com.ipc.oce.OCApp;
 import com.ipc.oce.OCObject;
+import com.ipc.oce.OCVariant;
 import com.ipc.oce.exceptions.ConfigurationException;
 import com.ipc.oce.objects.OCCatalogManager;
 import com.ipc.oce.objects.OCCatalogObject;
 import com.ipc.oce.objects.OCCatalogSelection;
 import com.ipc.oce.objects._OCCommonObject;
+import com.ipc.oce.xml.oc.OCXDTODataObject;
+import com.ipc.oce.xml.oc.OCXDTOFactory;
+import com.ipc.oce.xml.oc.OCXDTOObjectType;
 import com.ipc.oce.xml.oc.OCXDTOSerializer;
 import com.ipc.oce.xml.oc.OCXMLReader;
 import com.ipc.oce.xml.oc.OCXMLWriter;
@@ -40,7 +44,7 @@ public class CatalogsResourceImpl implements CatalogsResource {
     public static final String SYS_NS = "urn:ru:ilb:xdtoservices:xdtoservices";
 
     @Autowired
-    OCApplicationPool ocApplicationPool;
+    OCApplicationPool applicationPool;
 
     @Override
     public String getCatalog(String catalogName) {
@@ -48,7 +52,7 @@ public class CatalogsResourceImpl implements CatalogsResource {
         OCCatalogManager manager;
         StringBuffer sb = new StringBuffer(4096);
         try {
-            OCApp app = ocApplicationPool.getApplication();
+            OCApp app = applicationPool.getApplication();
             manager = app.getCatalogManager(catalogName);
             OCCatalogSelection selection = manager.select();
 
@@ -77,9 +81,10 @@ public class CatalogsResourceImpl implements CatalogsResource {
     public String getCatalogObject(String catalogName, UUID uid) {
 
         try {
-            OCApp app = ocApplicationPool.getApplication();
+            OCApp app = applicationPool.getApplication();
             OCCatalogManager catalogManager = app.getCatalogManager(catalogName);
             OCCatalogObject catalogObject = catalogManager.getRef(app.createUUID(uid.toString())).getObject();
+            //OCCatalogObject catalogObject = catalogManager.createItem();
             OCXDTOSerializer serializer = app.getXDTOSerializer();
             OCXMLWriter writer = app.newXMLWriter();
             writer.setString("UTF-8");
@@ -98,10 +103,18 @@ public class CatalogsResourceImpl implements CatalogsResource {
     @Override
     public UUID createCatalogObject(String catalogName, String string) {
         try {
-            OCApp app = ocApplicationPool.getApplication();
+            OCApp app = applicationPool.getApplication();
             OCXDTOSerializer serializer = app.getXDTOSerializer();
             OCXMLReader reader = app.newXMLReader();
             reader.setString(string);
+            
+//            OCXDTOFactory factory=app.getXDTOFactory();
+//            OCXDTOObjectType type=factory.createObjectType(factory.getCurrentConfigURI(), "CatalogObject."+ catalogName);
+//            OCXDTODataObject dataObject = factory.readXML(string, type);
+//            //OCXDTODataObject dataObject = factory.createDataObject(type);
+//            
+//            //OCObject object = serializer.readXML(reader);
+//            OCVariant objectv = serializer.readXDTO(dataObject);
             OCObject object = serializer.readXML(reader);
             _OCCommonObject commonObject = new _OCCommonObject(object);
             commonObject.write();

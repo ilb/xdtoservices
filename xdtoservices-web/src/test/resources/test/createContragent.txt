@@ -1,0 +1,4 @@
+Ошибка преобразования данных XDTO:
+НачалоСвойства: {http://v8.1c.ru/8.1/data/enterprise/current-config}CatalogObject.мфоКонтрагенты	Форма: Элемент	Тип: {http://v8.1c.ru/8.1/data/enterprise/current-config}CatalogObject.мфоКонтрагенты
+Ошибка преобразования данных XDTO:
+НачалоСвойства: ВидЧленства	Форма: Элемент	Тип: {http://v8.1c.ru/8.1/data/enterprise/current-config}EnumRef.мфоВидыЧленстваПайщиков [ 
