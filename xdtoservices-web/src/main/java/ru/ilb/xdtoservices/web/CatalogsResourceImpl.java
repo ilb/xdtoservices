@@ -17,15 +17,11 @@ package ru.ilb.xdtoservices.web;
 
 import com.ipc.oce.OCApp;
 import com.ipc.oce.OCObject;
-import com.ipc.oce.OCVariant;
 import com.ipc.oce.exceptions.ConfigurationException;
 import com.ipc.oce.objects.OCCatalogManager;
 import com.ipc.oce.objects.OCCatalogObject;
 import com.ipc.oce.objects.OCCatalogSelection;
 import com.ipc.oce.objects._OCCommonObject;
-import com.ipc.oce.xml.oc.OCXDTODataObject;
-import com.ipc.oce.xml.oc.OCXDTOFactory;
-import com.ipc.oce.xml.oc.OCXDTOObjectType;
 import com.ipc.oce.xml.oc.OCXDTOSerializer;
 import com.ipc.oce.xml.oc.OCXMLReader;
 import com.ipc.oce.xml.oc.OCXMLWriter;
@@ -35,6 +31,7 @@ import javax.ws.rs.Path;
 import org.jinterop.dcom.common.JIException;
 import org.jinterop.dcom.impls.automation.JIAutomationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import ru.ilb.xdtoservices.api.CatalogsResource;
 import ru.ilb.xdtoservices.core.OCApplicationPool;
 
@@ -45,6 +42,8 @@ public class CatalogsResourceImpl implements CatalogsResource {
 
     @Autowired
     OCApplicationPool applicationPool;
+    
+    @Autowired CatalogsResourceIntr catalogsResourceIntr;
 
     @Override
     public String getCatalog(String catalogName) {
@@ -84,7 +83,27 @@ public class CatalogsResourceImpl implements CatalogsResource {
             OCApp app = applicationPool.getApplication();
             OCCatalogManager catalogManager = app.getCatalogManager(catalogName);
             OCCatalogObject catalogObject = catalogManager.getRef(app.createUUID(uid.toString())).getObject();
-            //OCCatalogObject catalogObject = catalogManager.createItem();
+            OCXDTOSerializer serializer = app.getXDTOSerializer();
+            OCXMLWriter writer = app.newXMLWriter();
+            writer.setString("UTF-8");
+
+            serializer.writeXML(writer, catalogObject);
+            return writer.close();
+
+        } catch (JIAutomationException ex) {
+            throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
+        } catch (JIException | IOException | ConfigurationException ex) {
+            throw new RuntimeException(ex);
+        }
+
+    }
+    @Override
+    @Cacheable("catalogs")
+    public String getCatalogObjectTemplate(String catalogName) {
+        try {
+            OCApp app = applicationPool.getApplication();
+            OCCatalogManager catalogManager = app.getCatalogManager(catalogName);
+            OCCatalogObject catalogObject = catalogManager.createItem();
             OCXDTOSerializer serializer = app.getXDTOSerializer();
             OCXMLWriter writer = app.newXMLWriter();
             writer.setString("UTF-8");
