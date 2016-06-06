@@ -16,6 +16,20 @@
     </grammars>
 	
     <resources base="http://localhost:8080/xdtoservices/web">
+        <resource path="metadata">
+            <resource path="xmlSchema">
+                <method name="GET" id="exportXMLSchema">
+                    <request>
+                        <param name="uriNamespace" type="xsd:string" style="query">
+                            <doc>uriNamespace</doc>
+                        </param>
+                    </request>
+                    <response status="200">
+                        <representation mediaType="application/xml" />
+                    </response>
+                </method>
+            </resource>
+        </resource>
         <resource path="catalogs">
             <resource path="{catalogName}">
                 <param name="catalogName" type="xsd:string" style="template">
