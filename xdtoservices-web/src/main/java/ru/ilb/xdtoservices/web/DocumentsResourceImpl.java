@@ -16,81 +16,79 @@
 package ru.ilb.xdtoservices.web;
 
 import com.ipc.oce.OCApp;
-import com.ipc.oce.OCObject;
 import com.ipc.oce.exceptions.ConfigurationException;
 import com.ipc.oce.objects.OCCatalogManager;
 import com.ipc.oce.objects.OCCatalogObject;
-import com.ipc.oce.objects.OCCatalogSelection;
-import com.ipc.oce.objects._OCCommonObject;
+import com.ipc.oce.objects.OCDocumentManager;
+import com.ipc.oce.objects.OCDocumentObject;
+import com.ipc.oce.objects.OCDocumentRef;
+import com.ipc.oce.objects.OCDocumentSelection;
 import com.ipc.oce.xml.oc.OCXDTOSerializer;
-import com.ipc.oce.xml.oc.OCXMLReader;
 import com.ipc.oce.xml.oc.OCXMLWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.UUID;
 import javax.ws.rs.Path;
 import org.jinterop.dcom.common.JIException;
 import org.jinterop.dcom.impls.automation.JIAutomationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import ru.ilb.xdtoservices.api.CatalogsResource;
+import ru.ilb.xdtoservices.api.DocumentsResource;
 import ru.ilb.xdtoservices.core.OCApplicationPool;
-import ru.ilb.xdtoservices.core.XmlMergeImpl;
 
-@Path("catalogs")
-public class CatalogsResourceImpl implements CatalogsResource {
-
+@Path("documents")
+public class DocumentsResourceImpl implements DocumentsResource {
     public static final String SYS_NS = "urn:ru:ilb:xdtoservices:xdtoservices";
-
+    
     @Autowired
     OCApplicationPool applicationPool;
-    
-    @Autowired CatalogsResourceIntr catalogsResourceIntr;
-    
-    @Autowired XmlMergeImpl xmlMergeImpl;
 
     @Override
-    public String getCatalog(String catalogName) {
-
-        OCCatalogManager manager;
+    public String list(String documentName, Date dateStart, Date dateEnd) {
         StringBuffer sb = new StringBuffer(4096);
         try {
             OCApp app = applicationPool.getApplication();
-            manager = app.getCatalogManager(catalogName);
-            OCCatalogSelection selection = manager.select();
-
+            OCDocumentManager documentManager = app.getDocumentManager(documentName);
+            OCDocumentSelection documentSelection = documentManager.select(dateStart, dateEnd);
             OCXDTOSerializer serializer = app.getXDTOSerializer();
-            while (selection.next()) {
-                OCCatalogObject object = selection.getObject();
+            OCXMLWriter writer = app.newXMLWriter();
+            writer.setString("UTF-8");
+            
+            while (documentSelection.next()) {
+                OCDocumentObject object = documentSelection.getObject();
                 sb.append(serializer.writeXML(object));
             }
+
         } catch (JIAutomationException ex) {
             throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
         } catch (JIException | IOException | ConfigurationException ex) {
             throw new RuntimeException(ex);
         }
-
         surroundContainersTag(sb);
         return sb.toString();
-
+        
+    }
+    protected void surroundContainersTag(StringBuffer sb) {
+        sb.insert(0, "<xdto:DocumentObjects xmlns:xdto=\"" + SYS_NS + "\">");
+        sb.append("</xdto:DocumentObjects>");
     }
 
-    protected void surroundContainersTag(StringBuffer sb) {
-        sb.insert(0, "<xdto:CatalogObjects xmlns:xdto=\"" + SYS_NS + "\">");
-        sb.append("</xdto:CatalogObjects>");
+
+    @Override
+    public UUID create(String documentName, String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public String getCatalogObject(String catalogName, UUID uid) {
-
+    public String find(String documentName, UUID uid) {
         try {
             OCApp app = applicationPool.getApplication();
-            OCCatalogManager catalogManager = app.getCatalogManager(catalogName);
-            OCCatalogObject catalogObject = catalogManager.getRef(app.createUUID(uid.toString())).getObject();
+            OCDocumentManager documentManager = app.getDocumentManager(documentName);
+            OCDocumentObject documentObject = documentManager.getRef(app.createUUID(uid.toString())).getObject();
             OCXDTOSerializer serializer = app.getXDTOSerializer();
             OCXMLWriter writer = app.newXMLWriter();
             writer.setString("UTF-8");
 
-            serializer.writeXML(writer, catalogObject);
+            serializer.writeXML(writer, documentObject);
             
             String result=writer.close();
             
@@ -101,52 +99,33 @@ public class CatalogsResourceImpl implements CatalogsResource {
         } catch (JIException | IOException | ConfigurationException ex) {
             throw new RuntimeException(ex);
         }
-
     }
+
     @Override
-    @Cacheable("catalogs")
-    public String getCatalogObjectTemplate(String catalogName) {
+    public void edit(String documentName, UUID uid, String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void remove(String documentName, UUID uid) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public String getDocumentObjectTemplate(String documentName) {
         try {
             OCApp app = applicationPool.getApplication();
-            OCCatalogManager catalogManager = app.getCatalogManager(catalogName);
-            OCCatalogObject catalogObject = catalogManager.createItem();
+            OCDocumentManager documentManager = app.getDocumentManager(documentName);
+            OCDocumentObject documentObject = documentManager.createDocument();
             OCXDTOSerializer serializer = app.getXDTOSerializer();
             OCXMLWriter writer = app.newXMLWriter();
             writer.setString("UTF-8");
 
-            serializer.writeXML(writer, catalogObject);
-            return writer.close();
-
-        } catch (JIAutomationException ex) {
-            throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
-        } catch (JIException | IOException | ConfigurationException ex) {
-            throw new RuntimeException(ex);
-        }
-
-    }
-
-    @Override
-    public UUID createCatalogObject(String catalogName, String string) {
-        try {
-            OCApp app = applicationPool.getApplication();
-            String baseXml=getCatalogObjectTemplate(catalogName);
-            String patchedXml=xmlMergeImpl.mergeXml(baseXml, string);
+            serializer.writeXML(writer, documentObject);
             
-            OCXDTOSerializer serializer = app.getXDTOSerializer();
-            OCXMLReader reader = app.newXMLReader();
-            reader.setString(patchedXml);
+            String result=writer.close();
             
-//            OCXDTOFactory factory=app.getXDTOFactory();
-//            OCXDTOObjectType type=factory.createObjectType(factory.getCurrentConfigURI(), "CatalogObject."+ catalogName);
-//            OCXDTODataObject dataObject = factory.readXML(string, type);
-//            //OCXDTODataObject dataObject = factory.createDataObject(type);
-//            
-//            //OCObject object = serializer.readXML(reader);
-//            OCVariant objectv = serializer.readXDTO(dataObject);
-            OCObject object = serializer.readXML(reader);
-            _OCCommonObject commonObject = new _OCCommonObject(object);
-            commonObject.write();
-            return UUID.fromString(commonObject.getRef().getUUID().toString());
+            return result;
 
         } catch (JIAutomationException ex) {
             throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
@@ -154,4 +133,8 @@ public class CatalogsResourceImpl implements CatalogsResource {
             throw new RuntimeException(ex);
         }
     }
+
+
+
+    
 }
