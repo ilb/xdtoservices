@@ -77,44 +77,62 @@
             <doc>
                 documents resource
             </doc>
-            <method name="GET" id="list">
-                <doc>List of documents</doc>
-                <response status="200">
-                    <representation mediaType="application/xml"/>
-                </response>
-            </method>
-            <method name="POST" id="create">
-                <doc>create new document instance</doc>
-                <request>
-                    <representation mediaType="application/xml" />
-                </request>
-                <response>
-                    <representation mediaType="text/plain" element="uuid:UUIDType">
-                        <doc>UUID of created object</doc>
-                    </representation>
-                </response>
-            </method>
-            <resource path="{uid}">
-                <param name="uid" type="uuid:UUIDType" style="template">
-                    <doc>document uid</doc>
+            <resource path="{documentName}">
+                <param name="documentName" type="xsd:string" style="template">
+                    <doc>document name</doc>
                 </param>
-                <method name="GET" id="find">
-                    <doc>get document instance</doc>
+                <method name="GET" id="list">
+                    <doc>List of documents</doc>
+                    <request>
+                        <param name="dateStart" type="xsd:date" style="query"/>
+                        <param name="dateEnd" type="xsd:date" style="query"/>
+                    </request>
                     <response status="200">
-                        <representation mediaType="application/xml" />
+                        <representation mediaType="application/xml"/>
                     </response>
                 </method>
-                <method name="PUT" id="edit">
-                    <doc>edit document instance</doc>
+                <method name="POST" id="create">
+                    <doc>create new document instance</doc>
                     <request>
                         <representation mediaType="application/xml" />
                     </request>
-                    <response status="204"/>
+                    <response>
+                        <representation mediaType="text/plain" element="uuid:UUIDType">
+                            <doc>UUID of created object</doc>
+                        </representation>
+                    </response>
                 </method>
-                <method name="DELETE" id="remove">
-                    <doc>remove document instance</doc>
-                    <response status="204"/>
-                </method>
+                <resource path="template">
+                    <method name="GET" id="getDocumentObjectTemplate">
+                        <doc>get catalog item by uid</doc>
+                        <response status="200">
+                            <representation mediaType="application/xml" />
+                        </response>
+                    </method>
+                </resource>
+                
+                <resource path="{uid}">
+                    <param name="uid" type="uuid:UUIDType" style="template">
+                        <doc>document uid</doc>
+                    </param>
+                    <method name="GET" id="find">
+                        <doc>get document instance</doc>
+                        <response status="200">
+                            <representation mediaType="application/xml" />
+                        </response>
+                    </method>
+                    <method name="PUT" id="edit">
+                        <doc>edit document instance</doc>
+                        <request>
+                            <representation mediaType="application/xml" />
+                        </request>
+                        <response status="204"/>
+                    </method>
+                    <method name="DELETE" id="remove">
+                        <doc>remove document instance</doc>
+                        <response status="204"/>
+                    </method>
+                </resource>
             </resource>
         </resource>
     </resources>
