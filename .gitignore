@@ -1,2 +1,3 @@
 /xdtoservices-api/target/
 /xdtoservices-web/target/
+/xdtoservices-web/src/test/resources/test/*.xml

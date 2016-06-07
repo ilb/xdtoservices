@@ -94,6 +94,14 @@
                 <method name="POST" id="create">
                     <doc>create new document instance</doc>
                     <request>
+                        <param name="load" type="xsd:boolean" style="query">
+                            <doc>
+                                Если значение данного свойства Истина, то при выполнении записи 
+                                или удаления данных будет производиться минимум проверок, так как 
+                                при этом делается предположение, что производится запись данных, 
+                                полученных через механизмы обмена данными, и эти данные корректны.
+                            </doc>
+                        </param>
                         <representation mediaType="application/xml" />
                     </request>
                     <response>

@@ -16,6 +16,7 @@
 package ru.ilb.xdtoservices.web;
 
 import com.ipc.oce.OCApp;
+import com.ipc.oce.OCObject;
 import com.ipc.oce.exceptions.ConfigurationException;
 import com.ipc.oce.objects.OCCatalogManager;
 import com.ipc.oce.objects.OCCatalogObject;
@@ -23,7 +24,9 @@ import com.ipc.oce.objects.OCDocumentManager;
 import com.ipc.oce.objects.OCDocumentObject;
 import com.ipc.oce.objects.OCDocumentRef;
 import com.ipc.oce.objects.OCDocumentSelection;
+import com.ipc.oce.objects._OCCommonObject;
 import com.ipc.oce.xml.oc.OCXDTOSerializer;
+import com.ipc.oce.xml.oc.OCXMLReader;
 import com.ipc.oce.xml.oc.OCXMLWriter;
 import java.io.IOException;
 import java.util.Date;
@@ -34,9 +37,11 @@ import org.jinterop.dcom.impls.automation.JIAutomationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.ilb.xdtoservices.api.DocumentsResource;
 import ru.ilb.xdtoservices.core.OCApplicationPool;
+import ru.ilb.xdtoservices.core.XmlMergeImpl;
 
 @Path("documents")
 public class DocumentsResourceImpl implements DocumentsResource {
+    @Autowired XmlMergeImpl xmlMergeImpl;
     public static final String SYS_NS = "urn:ru:ilb:xdtoservices:xdtoservices";
     
     @Autowired
@@ -74,8 +79,28 @@ public class DocumentsResourceImpl implements DocumentsResource {
 
 
     @Override
-    public UUID create(String documentName, String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public UUID create(String documentName, Boolean load, String string) {
+        try {
+            OCApp app = applicationPool.getApplication();
+            String baseXml=getDocumentObjectTemplate(documentName);
+            String patchedXml=xmlMergeImpl.mergeXml(baseXml, string);
+            
+            OCXDTOSerializer serializer = app.getXDTOSerializer();
+            OCXMLReader reader = app.newXMLReader();
+            reader.setString(patchedXml);
+
+            OCObject object = serializer.readXML(reader);
+            OCDocumentObject commonObject = new OCDocumentObject(object);
+            if(Boolean.TRUE.equals(load)){
+                commonObject.getDataExchange().setLoad(Boolean.TRUE);
+            }
+            commonObject.write();
+            return UUID.fromString(commonObject.getRef().getUUID().toString());
+        } catch (JIAutomationException ex) {
+            throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
+        } catch (JIException | IOException | ConfigurationException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
@@ -133,8 +158,6 @@ public class DocumentsResourceImpl implements DocumentsResource {
             throw new RuntimeException(ex);
         }
     }
-
-
 
     
 }
