@@ -106,7 +106,7 @@ public class XmlMergeImpl {
                         if (firstElBase != null) {
                             firstElBase.getParentNode().insertBefore(nodeCopy, firstElBase);
                         } else {
-                            docBase.appendChild(nodeCopy);
+                            docBase.getDocumentElement().appendChild(nodeCopy);
                         }
                     }
                 }
