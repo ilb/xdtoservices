@@ -145,8 +145,8 @@
         </jaxrs:features>
         <jaxrs:inInterceptors>
             <!-- uncomment to enable inbound request logging -->
-            <ref bean="logInbound"/>
-            <ref bean="logOutbound"/>
+<!--            <ref bean="logInbound"/>
+            <ref bean="logOutbound"/>-->
         </jaxrs:inInterceptors>
         
         <jaxrs:extensionMappings>
