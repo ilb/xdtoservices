@@ -82,7 +82,7 @@ public class DocumentsResourceImpl implements DocumentsResource {
     public UUID create(String documentName, Boolean load, String string) {
         try {
             OCApp app = applicationPool.getApplication();
-            String baseXml=getDocumentObjectTemplate(documentName);
+            String baseXml=getTemplate(documentName);
             String patchedXml=xmlMergeImpl.mergeXml(baseXml, string);
             
             OCXDTOSerializer serializer = app.getXDTOSerializer();
@@ -137,7 +137,7 @@ public class DocumentsResourceImpl implements DocumentsResource {
     }
 
     @Override
-    public String getDocumentObjectTemplate(String documentName) {
+    public String getTemplate(String documentName) {
         try {
             OCApp app = applicationPool.getApplication();
             OCDocumentManager documentManager = app.getDocumentManager(documentName);

@@ -123,6 +123,9 @@
     <bean id="exceptionHandler" class="ru.ilb.common.jaxrs.exceptionhandler.SendMailExceptionHandler">
         <property name="mailTo" value="${SERVER_ADMIN}"/>
     </bean>
+    <!-- inbound request logging -->
+    <bean id="logInbound" class="org.apache.cxf.interceptor.LoggingInInterceptor"/>
+    <bean id="logOutbound" class="org.apache.cxf.interceptor.LoggingOutInterceptor"/>
 
     <!-- auto register @Component annotated classes -->
     <context:component-scan base-package="ru.ilb.xdtoservices.web,ru.ilb.xdtoservices.core"/>
@@ -140,6 +143,12 @@
             <ref bean="swagger2Feature" />
             -->
         </jaxrs:features>
+        <jaxrs:inInterceptors>
+            <!-- uncomment to enable inbound request logging -->
+            <ref bean="logInbound"/>
+            <ref bean="logOutbound"/>
+        </jaxrs:inInterceptors>
+        
         <jaxrs:extensionMappings>
             <entry key="xml" value="application/xml;charset=UTF-8"/>
             <entry key="json" value="application/json;charset=UTF-8"/>

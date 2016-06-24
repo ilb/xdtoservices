@@ -35,13 +35,13 @@
                 <param name="catalogName" type="xsd:string" style="template">
                     <doc>catalog name</doc>
                 </param>
-                <method name="GET" id="getCatalog">
+                <method name="GET" id="list">
                     <doc>get catalog contents</doc>
                     <response status="200">
                         <representation mediaType="application/xml" />
                     </response>
                 </method>
-                <method name="POST" id="createCatalogObject">
+                <method name="POST" id="create">
                     <doc>create new document instance</doc>
                     <request>
                         <representation mediaType="application/xml" />
@@ -52,8 +52,34 @@
                         </representation>
                     </response>
                 </method>
+                <resource path="findByAttribute">
+                    <method name="GET" id="findByAttribute">
+                        <doc>
+                            Осуществляет поиск элемента по значению реквизита. Примечание: Если
+                            существует несколько элементов с указанным значением реквизита, то будет
+                            найдет только один из них. Для реквизитов типа Строка поиск
+                            осуществляется по точному соответствию
+                        </doc>
+                        <request>
+                            <param name="attributeName" type="xsd:string" style="query">
+                                <doc>
+                                    Имя реквизита, как он задан в конфигураторе, по значению
+                                    которого осуществляется поиск.
+                                </doc>
+                            </param>
+                            <param name="attributeValue" type="xsd:string" style="query">
+                                <doc>
+                                    Значение реквизита, по которому должен выполняться поиск
+                                </doc>
+                            </param>
+                        </request>
+                        <response status="200">
+                            <representation mediaType="application/xml" />
+                        </response>
+                    </method>
+                </resource>
                 <resource path="template">
-                    <method name="GET" id="getCatalogObjectTemplate">
+                    <method name="GET" id="getTemplate">
                         <doc>get catalog item by uid</doc>
                         <response status="200">
                             <representation mediaType="application/xml" />
@@ -64,11 +90,18 @@
                     <param name="uid" type="uuid:UUIDType" style="template">
                         <doc>catalog item uid</doc>
                     </param>
-                    <method name="GET" id="getCatalogObject">
+                    <method name="GET" id="find">
                         <doc>get catalog item by uid</doc>
                         <response status="200">
                             <representation mediaType="application/xml" />
                         </response>
+                    </method>
+                    <method name="PUT" id="edit">
+                        <doc>edit catalog object</doc>
+                        <request>
+                            <representation mediaType="application/xml" />
+                        </request>
+                        <response status="204"/>
                     </method>
                 </resource>                
             </resource>
@@ -111,7 +144,7 @@
                     </response>
                 </method>
                 <resource path="template">
-                    <method name="GET" id="getDocumentObjectTemplate">
+                    <method name="GET" id="getTemplate">
                         <doc>get catalog item by uid</doc>
                         <response status="200">
                             <representation mediaType="application/xml" />
