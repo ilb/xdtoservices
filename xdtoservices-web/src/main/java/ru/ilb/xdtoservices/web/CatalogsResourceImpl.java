@@ -17,9 +17,11 @@ package ru.ilb.xdtoservices.web;
 
 import com.ipc.oce.OCApp;
 import com.ipc.oce.OCObject;
+import com.ipc.oce.OCVariant;
 import com.ipc.oce.exceptions.ConfigurationException;
 import com.ipc.oce.objects.OCCatalogManager;
 import com.ipc.oce.objects.OCCatalogObject;
+import com.ipc.oce.objects.OCCatalogRef;
 import com.ipc.oce.objects.OCCatalogSelection;
 import com.ipc.oce.objects._OCCommonObject;
 import com.ipc.oce.xml.oc.OCXDTOSerializer;
@@ -43,13 +45,15 @@ public class CatalogsResourceImpl implements CatalogsResource {
 
     @Autowired
     OCApplicationPool applicationPool;
-    
-    @Autowired CatalogsResourceIntr catalogsResourceIntr;
-    
-    @Autowired XmlMergeImpl xmlMergeImpl;
+
+    @Autowired
+    CatalogsResourceIntr catalogsResourceIntr;
+
+    @Autowired
+    XmlMergeImpl xmlMergeImpl;
 
     @Override
-    public String getCatalog(String catalogName) {
+    public String list(String catalogName) {
 
         OCCatalogManager manager;
         StringBuffer sb = new StringBuffer(4096);
@@ -80,7 +84,7 @@ public class CatalogsResourceImpl implements CatalogsResource {
     }
 
     @Override
-    public String getCatalogObject(String catalogName, UUID uid) {
+    public String find(String catalogName, UUID uid) {
 
         try {
             OCApp app = applicationPool.getApplication();
@@ -91,9 +95,9 @@ public class CatalogsResourceImpl implements CatalogsResource {
             writer.setString("UTF-8");
 
             serializer.writeXML(writer, catalogObject);
-            
-            String result=writer.close();
-            
+
+            String result = writer.close();
+
             return result;
 
         } catch (JIAutomationException ex) {
@@ -103,9 +107,10 @@ public class CatalogsResourceImpl implements CatalogsResource {
         }
 
     }
+
     @Override
     @Cacheable("catalogs")
-    public String getCatalogObjectTemplate(String catalogName) {
+    public String getTemplate(String catalogName) {
         try {
             OCApp app = applicationPool.getApplication();
             OCCatalogManager catalogManager = app.getCatalogManager(catalogName);
@@ -126,16 +131,16 @@ public class CatalogsResourceImpl implements CatalogsResource {
     }
 
     @Override
-    public UUID createCatalogObject(String catalogName, String string) {
+    public UUID create(String catalogName, String string) {
         try {
             OCApp app = applicationPool.getApplication();
-            String baseXml=getCatalogObjectTemplate(catalogName);
-            String patchedXml=xmlMergeImpl.mergeXml(baseXml, string);
-            
+            String baseXml = getTemplate(catalogName);
+            String patchedXml = xmlMergeImpl.mergeXml(baseXml, string);
+
             OCXDTOSerializer serializer = app.getXDTOSerializer();
             OCXMLReader reader = app.newXMLReader();
             reader.setString(patchedXml);
-            
+
 //            OCXDTOFactory factory=app.getXDTOFactory();
 //            OCXDTOObjectType type=factory.createObjectType(factory.getCurrentConfigURI(), "CatalogObject."+ catalogName);
 //            OCXDTODataObject dataObject = factory.readXML(string, type);
@@ -147,6 +152,55 @@ public class CatalogsResourceImpl implements CatalogsResource {
             _OCCommonObject commonObject = new _OCCommonObject(object);
             commonObject.write();
             return UUID.fromString(commonObject.getRef().getUUID().toString());
+
+        } catch (JIAutomationException ex) {
+            throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
+        } catch (JIException | IOException | ConfigurationException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public String findByAttribute(String catalogName, String attributeName, String attributeValue) {
+        try {
+            OCApp app = applicationPool.getApplication();
+            OCCatalogManager catalogManager = app.getCatalogManager(catalogName);
+            OCCatalogRef catalogObjectRef = catalogManager.findByAttribute(attributeName, new OCVariant(attributeValue), null, null);
+            String result = null;
+            if (!catalogObjectRef.isEmpty()) {
+
+                OCXDTOSerializer serializer = app.getXDTOSerializer();
+                OCXMLWriter writer = app.newXMLWriter();
+                writer.setString("UTF-8");
+
+                serializer.writeXML(writer, catalogObjectRef.getObject());
+
+                result = writer.close();
+            }
+
+            return result;
+
+        } catch (JIAutomationException ex) {
+            throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
+        } catch (JIException | IOException | ConfigurationException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public void edit(String catalogName, UUID uid, String string) {
+        try {
+            OCApp app = applicationPool.getApplication();
+            String baseXml = find(catalogName,uid);
+            String patchedXml = xmlMergeImpl.mergeXml(baseXml, string);
+
+            OCXDTOSerializer serializer = app.getXDTOSerializer();
+            OCXMLReader reader = app.newXMLReader();
+            reader.setString(patchedXml);
+
+            OCObject object = serializer.readXML(reader);
+            _OCCommonObject commonObject = new _OCCommonObject(object);
+            commonObject.write();
 
         } catch (JIAutomationException ex) {
             throw new RuntimeException(ex.getExcepInfo().getExcepDesc());

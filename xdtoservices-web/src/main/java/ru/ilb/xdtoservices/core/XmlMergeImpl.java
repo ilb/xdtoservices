@@ -86,7 +86,7 @@ public class XmlMergeImpl {
                         // не табличная часть
                         //System.out.println(element.getNodeName() + " = " + element.getTextContent());
                         if (!elementsBase.containsKey(elementPatch.getNodeName())) {
-                            throw new IllegalArgumentException("Неизвестный элемент " + elementPatch.getNodeName());
+                            throw new IllegalArgumentException("Неизвестный элемент " + elementPatch.getNodeName()+ "\nstrBase="+strBase + " \nstrPatch="+strPatch);
                         }
                         // patch -> base
                         elementsBase.get(elementPatch.getNodeName()).setTextContent(elementPatch.getTextContent());
