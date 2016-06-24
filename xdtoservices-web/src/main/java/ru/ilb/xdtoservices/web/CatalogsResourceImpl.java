@@ -89,14 +89,18 @@ public class CatalogsResourceImpl implements CatalogsResource {
         try {
             OCApp app = applicationPool.getApplication();
             OCCatalogManager catalogManager = app.getCatalogManager(catalogName);
-            OCCatalogObject catalogObject = catalogManager.getRef(app.createUUID(uid.toString())).getObject();
-            OCXDTOSerializer serializer = app.getXDTOSerializer();
-            OCXMLWriter writer = app.newXMLWriter();
-            writer.setString("UTF-8");
+            OCCatalogRef catalogRef = catalogManager.getRef(app.createUUID(uid.toString()));
+            String result = null;
+            if (!catalogRef.toString().contains("Объект не найден")) { //FIXME
+                OCCatalogObject catalogObject = catalogRef.getObject();
+                OCXDTOSerializer serializer = app.getXDTOSerializer();
+                OCXMLWriter writer = app.newXMLWriter();
+                writer.setString("UTF-8");
 
-            serializer.writeXML(writer, catalogObject);
+                serializer.writeXML(writer, catalogObject);
 
-            String result = writer.close();
+                result = writer.close();
+            }
 
             return result;
 
@@ -191,7 +195,10 @@ public class CatalogsResourceImpl implements CatalogsResource {
     public void edit(String catalogName, UUID uid, String string) {
         try {
             OCApp app = applicationPool.getApplication();
-            String baseXml = find(catalogName,uid);
+            String baseXml = find(catalogName, uid);
+            if(baseXml==null){
+                baseXml=getTemplate(catalogName);
+            }
             String patchedXml = xmlMergeImpl.mergeXml(baseXml, string);
 
             OCXDTOSerializer serializer = app.getXDTOSerializer();

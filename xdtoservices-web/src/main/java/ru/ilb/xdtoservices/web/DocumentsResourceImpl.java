@@ -18,13 +18,10 @@ package ru.ilb.xdtoservices.web;
 import com.ipc.oce.OCApp;
 import com.ipc.oce.OCObject;
 import com.ipc.oce.exceptions.ConfigurationException;
-import com.ipc.oce.objects.OCCatalogManager;
-import com.ipc.oce.objects.OCCatalogObject;
 import com.ipc.oce.objects.OCDocumentManager;
 import com.ipc.oce.objects.OCDocumentObject;
 import com.ipc.oce.objects.OCDocumentRef;
 import com.ipc.oce.objects.OCDocumentSelection;
-import com.ipc.oce.objects._OCCommonObject;
 import com.ipc.oce.xml.oc.OCXDTOSerializer;
 import com.ipc.oce.xml.oc.OCXMLReader;
 import com.ipc.oce.xml.oc.OCXMLWriter;
@@ -41,9 +38,11 @@ import ru.ilb.xdtoservices.core.XmlMergeImpl;
 
 @Path("documents")
 public class DocumentsResourceImpl implements DocumentsResource {
-    @Autowired XmlMergeImpl xmlMergeImpl;
+
+    @Autowired
+    XmlMergeImpl xmlMergeImpl;
     public static final String SYS_NS = "urn:ru:ilb:xdtoservices:xdtoservices";
-    
+
     @Autowired
     OCApplicationPool applicationPool;
 
@@ -57,7 +56,7 @@ public class DocumentsResourceImpl implements DocumentsResource {
             OCXDTOSerializer serializer = app.getXDTOSerializer();
             OCXMLWriter writer = app.newXMLWriter();
             writer.setString("UTF-8");
-            
+
             while (documentSelection.next()) {
                 OCDocumentObject object = documentSelection.getObject();
                 sb.append(serializer.writeXML(object));
@@ -70,28 +69,28 @@ public class DocumentsResourceImpl implements DocumentsResource {
         }
         surroundContainersTag(sb);
         return sb.toString();
-        
+
     }
+
     protected void surroundContainersTag(StringBuffer sb) {
         sb.insert(0, "<xdto:DocumentObjects xmlns:xdto=\"" + SYS_NS + "\">");
         sb.append("</xdto:DocumentObjects>");
     }
 
-
     @Override
     public UUID create(String documentName, Boolean load, String string) {
         try {
             OCApp app = applicationPool.getApplication();
-            String baseXml=getTemplate(documentName);
-            String patchedXml=xmlMergeImpl.mergeXml(baseXml, string);
-            
+            String baseXml = getTemplate(documentName);
+            String patchedXml = xmlMergeImpl.mergeXml(baseXml, string);
+
             OCXDTOSerializer serializer = app.getXDTOSerializer();
             OCXMLReader reader = app.newXMLReader();
             reader.setString(patchedXml);
 
             OCObject object = serializer.readXML(reader);
             OCDocumentObject commonObject = new OCDocumentObject(object);
-            if(Boolean.TRUE.equals(load)){
+            if (Boolean.TRUE.equals(load)) {
                 commonObject.getDataExchange().setLoad(Boolean.TRUE);
             }
             commonObject.write();
@@ -108,15 +107,19 @@ public class DocumentsResourceImpl implements DocumentsResource {
         try {
             OCApp app = applicationPool.getApplication();
             OCDocumentManager documentManager = app.getDocumentManager(documentName);
-            OCDocumentObject documentObject = documentManager.getRef(app.createUUID(uid.toString())).getObject();
-            OCXDTOSerializer serializer = app.getXDTOSerializer();
-            OCXMLWriter writer = app.newXMLWriter();
-            writer.setString("UTF-8");
+            OCDocumentRef documentRef = documentManager.getRef(app.createUUID(uid.toString()));
+            String result = null;
+            if (!documentRef.toString().contains("Объект не найден")) { //FIXME
+                OCDocumentObject documentObject = documentRef.getObject();
+                OCXDTOSerializer serializer = app.getXDTOSerializer();
+                OCXMLWriter writer = app.newXMLWriter();
+                writer.setString("UTF-8");
 
-            serializer.writeXML(writer, documentObject);
-            
-            String result=writer.close();
-            
+                serializer.writeXML(writer, documentObject);
+
+                result = writer.close();
+            }
+
             return result;
 
         } catch (JIAutomationException ex) {
@@ -127,8 +130,30 @@ public class DocumentsResourceImpl implements DocumentsResource {
     }
 
     @Override
-    public void edit(String documentName, UUID uid, String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void edit(String documentName, UUID uid, Boolean load, String string) {
+        try {
+            OCApp app = applicationPool.getApplication();
+            String baseXml = find(documentName, uid);
+            if(baseXml==null){ 
+                baseXml=getTemplate(documentName);
+            }
+            String patchedXml = xmlMergeImpl.mergeXml(baseXml, string);
+
+            OCXDTOSerializer serializer = app.getXDTOSerializer();
+            OCXMLReader reader = app.newXMLReader();
+            reader.setString(patchedXml);
+
+            OCObject object = serializer.readXML(reader);
+            OCDocumentObject commonObject = new OCDocumentObject(object);
+            if (Boolean.TRUE.equals(load)) {
+                commonObject.getDataExchange().setLoad(Boolean.TRUE);
+            }
+            commonObject.write();
+        } catch (JIAutomationException ex) {
+            throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
+        } catch (JIException | IOException | ConfigurationException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
@@ -147,9 +172,9 @@ public class DocumentsResourceImpl implements DocumentsResource {
             writer.setString("UTF-8");
 
             serializer.writeXML(writer, documentObject);
-            
-            String result=writer.close();
-            
+
+            String result = writer.close();
+
             return result;
 
         } catch (JIAutomationException ex) {
@@ -159,5 +184,4 @@ public class DocumentsResourceImpl implements DocumentsResource {
         }
     }
 
-    
 }
