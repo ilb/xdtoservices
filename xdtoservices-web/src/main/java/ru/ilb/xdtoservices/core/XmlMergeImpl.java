@@ -98,7 +98,7 @@ public class XmlMergeImpl {
                         if (elementsBase.containsKey(elementPatch.getNodeName())) {
                             firstElBase = elementsBase.get(elementPatch.getNodeName());
                             //все пометим для удаления
-                            for (Element el = firstElBase; el.getNodeName().equals(elementPatch.getNodeName()); el = getNextElementSibling(el)) {
+                            for (Element el = firstElBase; el!=null && el.getNodeName().equals(elementPatch.getNodeName()); el = getNextElementSibling(el)) {
                                 elementsForRemove.add(el);
                             }
                         }
