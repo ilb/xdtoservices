@@ -152,6 +152,7 @@
         <jaxrs:extensionMappings>
             <entry key="xml" value="application/xml;charset=UTF-8"/>
             <entry key="json" value="application/json;charset=UTF-8"/>
+            <entry key="txt" value="text/plain;charset=UTF-8"/>
         </jaxrs:extensionMappings>
     </jaxrs:server>
 </beans>
