@@ -215,4 +215,51 @@ public class CatalogsResourceImpl implements CatalogsResource {
             throw new RuntimeException(ex);
         }
     }
+
+    @Override
+    public String findByDescription(String catalogName, String description) {
+        try {
+            OCApp app = applicationPool.getApplication();
+            OCCatalogManager catalogManager = app.getCatalogManager(catalogName);
+            OCCatalogRef catalogObjectRef = catalogManager.findByDescription(description);;
+            String result = null;
+            if (!catalogObjectRef.isEmpty()) {
+
+                OCXDTOSerializer serializer = app.getXDTOSerializer();
+                OCXMLWriter writer = app.newXMLWriter();
+                writer.setString("UTF-8");
+
+                serializer.writeXML(writer, catalogObjectRef.getObject());
+
+                result = writer.close();
+            }
+
+            return result;
+
+        } catch (JIAutomationException ex) {
+            throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
+        } catch (JIException | IOException | ConfigurationException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public UUID findRefByDescription(String catalogName, String description) {
+        try {
+            OCApp app = applicationPool.getApplication();
+            OCCatalogManager catalogManager = app.getCatalogManager(catalogName);
+            OCCatalogRef catalogObjectRef = catalogManager.findByDescription(description);;
+            UUID result = null;
+            if (!catalogObjectRef.isEmpty()) {
+                result=UUID.fromString(catalogObjectRef.getUUID().toString());
+            }
+
+            return result;
+
+        } catch (JIAutomationException ex) {
+            throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
+        } catch (JIException | IOException | ConfigurationException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 }

@@ -4,15 +4,14 @@
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:html="http://www.w3.org/1999/xhtml"
     xmlns="http://wadl.dev.java.net/2009/02"
-    xmlns:tns="urn:ru:ilb:xdtoservices:xdtoservices"
-    xmlns:uuid="urn:ru:ilb:basicuuid:basicuuid"
+    xmlns:core="urn:ru:ilb:xdtoservices:core"
 >
 	 
     <doc title="xdtoservices API">
         xdtoservices API
     </doc>
     <grammars>
-        <include href="xdtoservices.xsd" />
+        <include href="core.xsd" />
     </grammars>
 	
     <resources base="http://localhost:8080/xdtoservices/web">
@@ -47,7 +46,7 @@
                         <representation mediaType="application/xml" />
                     </request>
                     <response>
-                        <representation mediaType="text/plain" element="uuid:UUIDType">
+                        <representation mediaType="text/plain" element="core:UUIDType">
                             <doc>UUID of created object</doc>
                         </representation>
                     </response>
@@ -78,6 +77,58 @@
                         </response>
                     </method>
                 </resource>
+                <resource path="findByDescription">
+                    <method name="GET" id="findByDescription">
+                        <doc>
+                            Осуществляет поиск элемента по его наименованию. Примечание: Если существует несколько элементов 
+                            с указанным наименованием, то будет найден только один из них.
+                        </doc>
+                        <request>
+                            <param name="description" type="xsd:string" style="query">
+                                <doc>
+                                    Значение реквизита, по которому должен выполняться поиск
+                                </doc>
+                            </param>
+                            <!--                            <param name="useStartWith" type="xsd:boolean" style="query">
+                                <doc>
+                                    Определяет режим поиска по полному соответствию. Поиск будет успешным, если строка поиска:
+                                    в случае значения параметра Ложь - будет соответствовать левой части наименования; 
+                                    в случае значения параметра Истина - будет полностью совпадать с наименованием (за исключением "хвостовых" пробелов в наименовании).
+                                </doc>
+                            </param>-->
+                        </request>
+                        <response status="200">
+                            <representation mediaType="application/xml" />
+                        </response>
+                    </method>
+                </resource>
+                <resource path="findRefByDescription">
+                    <method name="GET" id="findRefByDescription">
+                        <doc>
+                            Осуществляет поиск элемента по его наименованию. Примечание: Если существует несколько элементов 
+                            с указанным наименованием, то будет найден только один из них.
+                        </doc>
+                        <request>
+                            <param name="description" type="xsd:string" style="query">
+                                <doc>
+                                    Значение реквизита, по которому должен выполняться поиск
+                                </doc>
+                            </param>
+                            <!--                            <param name="useStartWith" type="xsd:boolean" style="query">
+                                <doc>
+                                    Определяет режим поиска по полному соответствию. Поиск будет успешным, если строка поиска:
+                                    в случае значения параметра Ложь - будет соответствовать левой части наименования; 
+                                    в случае значения параметра Истина - будет полностью совпадать с наименованием (за исключением "хвостовых" пробелов в наименовании).
+                                </doc>
+                            </param>-->
+                        </request>
+                        <response status="200">
+                            <representation mediaType="text/plain" element="core:UUIDType">
+                                <doc>UUID of found object</doc>
+                            </representation>
+                        </response>
+                    </method>
+                </resource>
                 <resource path="template">
                     <method name="GET" id="getTemplate">
                         <doc>get catalog item by uid</doc>
@@ -87,7 +138,7 @@
                     </method>
                 </resource>
                 <resource path="{uid}">
-                    <param name="uid" type="uuid:UUIDType" style="template">
+                    <param name="uid" type="core:UUIDType" style="template">
                         <doc>catalog item uid</doc>
                     </param>
                     <method name="GET" id="find">
@@ -138,7 +189,7 @@
                         <representation mediaType="application/xml" />
                     </request>
                     <response>
-                        <representation mediaType="text/plain" element="uuid:UUIDType">
+                        <representation mediaType="text/plain" element="core:UUIDType">
                             <doc>UUID of created object</doc>
                         </representation>
                     </response>
@@ -153,7 +204,7 @@
                 </resource>
                 
                 <resource path="{uid}">
-                    <param name="uid" type="uuid:UUIDType" style="template">
+                    <param name="uid" type="core:UUIDType" style="template">
                         <doc>document uid</doc>
                     </param>
                     <method name="GET" id="find">

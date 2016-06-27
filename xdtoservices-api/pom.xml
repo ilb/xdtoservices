@@ -26,11 +26,11 @@
             <version>${apache-cxf.version}</version>
             <scope>compile</scope>
         </dependency>-->
-        <dependency>
+<!--        <dependency>
             <groupId>ru.ilb.basicuuid</groupId>
             <artifactId>basicuuid-api</artifactId>
             <version>1.0</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
             <artifactId>jaxb2-basics-runtime</artifactId>
@@ -116,7 +116,7 @@
                                     <wadl>${basedir}/src/main/resources/schemas/xdtoservices/xdtoservices.wadl</wadl>
                                     <packagename>ru.ilb.xdtoservices.api</packagename>
                                     <bindingFiles>
-                                        <bindingFile>${basedir}/src/main/resources/schemas/xdtoservices/xdtoservices.xjb</bindingFile>
+                                        <bindingFile>${basedir}/src/main/resources/schemas/xdtoservices/core.xjb</bindingFile>
                                     </bindingFiles>
                                     <extraargs>
                                         <extraarg>-verbose</extraarg>
@@ -124,7 +124,7 @@
                                         <extraarg>-javaDocs</extraarg>
                                         <extraarg>-xjc-Xjavadoc</extraarg>
                                         <extraarg>-tMap</extraarg>
-                                        <extraarg>{urn:ru:ilb:basicuuid:basicuuid}UUIDType=java.util.UUID</extraarg>
+                                        <extraarg>{urn:ru:ilb:xdtoservices:core}UUIDType=java.util.UUID</extraarg>
                                         <extraarg>-catalog</extraarg>
                                         <extraarg>${basedir}/src/main/resources/schemas/xdtoservices/catalog.xml</extraarg>
                                         <extraarg>-repMap</extraarg>
