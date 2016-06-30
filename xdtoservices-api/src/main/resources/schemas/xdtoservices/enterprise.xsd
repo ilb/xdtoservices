@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema elementFormDefault="qualified" xmlns="urn:ru:ilb:xdtoservices:enterprise"
+            targetNamespace="urn:ru:ilb:xdtoservices:enterprise"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:simpleType name="DocumentPostingMode">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Regular"/>
+            <xsd:enumeration value="RealTime"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="DocumentWriteMode">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="Write"/>
+            <xsd:enumeration value="Posting"/>
+            <xsd:enumeration value="UndoPosting"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>

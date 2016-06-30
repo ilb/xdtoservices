@@ -1,0 +1,1 @@
+curl -v -X POST -H "Content-Type: application/xml" -u ide:123 -d @createRegister.xml -o createRegister.txt http://localhost:8080/xdtoservices-web/web/informationregisters

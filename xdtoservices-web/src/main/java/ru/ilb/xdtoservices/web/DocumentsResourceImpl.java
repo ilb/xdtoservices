@@ -17,6 +17,7 @@ package ru.ilb.xdtoservices.web;
 
 import com.ipc.oce.OCApp;
 import com.ipc.oce.OCObject;
+import com.ipc.oce.StaticFieldInstance;
 import com.ipc.oce.exceptions.ConfigurationException;
 import com.ipc.oce.objects.OCDocumentManager;
 import com.ipc.oce.objects.OCDocumentObject;
@@ -35,6 +36,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.ilb.xdtoservices.api.DocumentsResource;
 import ru.ilb.xdtoservices.core.OCApplicationPool;
 import ru.ilb.xdtoservices.core.XmlMergeImpl;
+import ru.ilb.xdtoservices.enterprise.DocumentPostingMode;
+import ru.ilb.xdtoservices.enterprise.DocumentWriteMode;
 
 @Path("documents")
 public class DocumentsResourceImpl implements DocumentsResource {
@@ -78,7 +81,7 @@ public class DocumentsResourceImpl implements DocumentsResource {
     }
 
     @Override
-    public UUID create(String documentName, Boolean load, String string) {
+    public UUID create(String documentName, Boolean load, DocumentWriteMode writeMode, DocumentPostingMode postingMode, String string) {
         try {
             OCApp app = applicationPool.getApplication();
             String baseXml = getTemplate(documentName);
@@ -93,7 +96,15 @@ public class DocumentsResourceImpl implements DocumentsResource {
             if (Boolean.TRUE.equals(load)) {
                 commonObject.getDataExchange().setLoad(Boolean.TRUE);
             }
-            commonObject.write();
+            StaticFieldInstance sfWriteMode=null;
+            if(writeMode!=null){
+                sfWriteMode=app.getStaticFields("DocumentWriteMode."+writeMode.value());
+            }
+            StaticFieldInstance sfPostingMode=null;
+            if(postingMode!=null){
+                sfPostingMode=app.getStaticFields("DocumentPostingMode."+postingMode.value());
+            }
+            commonObject.write(sfWriteMode,sfPostingMode);
             return UUID.fromString(commonObject.getRef().getUUID().toString());
         } catch (JIAutomationException ex) {
             throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
@@ -130,7 +141,7 @@ public class DocumentsResourceImpl implements DocumentsResource {
     }
 
     @Override
-    public void edit(String documentName, UUID uid, Boolean load, String string) {
+    public void edit(String documentName, UUID uid, Boolean load, DocumentWriteMode writeMode, DocumentPostingMode postingMode, String string) {
         try {
             OCApp app = applicationPool.getApplication();
             String baseXml = find(documentName, uid);
@@ -148,7 +159,16 @@ public class DocumentsResourceImpl implements DocumentsResource {
             if (Boolean.TRUE.equals(load)) {
                 commonObject.getDataExchange().setLoad(Boolean.TRUE);
             }
-            commonObject.write();
+            StaticFieldInstance sfWriteMode=null;
+            if(writeMode!=null){
+                sfWriteMode=app.getStaticFields("DocumentWriteMode."+writeMode.value());
+            }
+            StaticFieldInstance sfPostingMode=null;
+            if(postingMode!=null){
+                sfPostingMode=app.getStaticFields("DocumentPostingMode."+postingMode.value());
+            }
+            
+            commonObject.write(sfWriteMode,sfPostingMode);
         } catch (JIAutomationException ex) {
             throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
         } catch (JIException | IOException | ConfigurationException ex) {
@@ -158,7 +178,19 @@ public class DocumentsResourceImpl implements DocumentsResource {
 
     @Override
     public void remove(String documentName, UUID uid) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            OCApp app = applicationPool.getApplication();
+            OCDocumentManager documentManager = app.getDocumentManager(documentName);
+            OCDocumentRef documentRef = documentManager.getRef(app.createUUID(uid.toString()));
+            if (!documentRef.toString().contains("Объект не найден")) { //FIXME
+                OCDocumentObject documentObject = documentRef.getObject();
+                documentObject.delete();
+            }
+        } catch (JIAutomationException ex) {
+            throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
+        } catch (JIException | IOException | ConfigurationException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override

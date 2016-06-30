@@ -5,6 +5,7 @@
     xmlns:html="http://www.w3.org/1999/xhtml"
     xmlns="http://wadl.dev.java.net/2009/02"
     xmlns:core="urn:ru:ilb:xdtoservices:core"
+    xmlns:enterprise="urn:ru:ilb:xdtoservices:enterprise"
 >
 	 
     <doc title="xdtoservices API">
@@ -12,6 +13,7 @@
     </doc>
     <grammars>
         <include href="core.xsd" />
+        <include href="enterprise.xsd" />
     </grammars>
 	
     <resources base="http://localhost:8080/xdtoservices/web">
@@ -71,12 +73,71 @@
                                     Значение реквизита, по которому должен выполняться поиск
                                 </doc>
                             </param>
+                            <param name="attributeValueRef" type="xsd:string" style="query">
+                                <doc>
+                                    Для поиска по аттрибуту, значением которого является ссылка на объект,необъодимо передавать тип объекта,
+                                    например CatalogRef.Организации.
+                                    При этом в attributeValue должен быть UUID объекта.
+                                </doc>
+                            </param>
                         </request>
                         <response status="200">
                             <representation mediaType="application/xml" />
                         </response>
                     </method>
                 </resource>
+                <resource path="findRefByAttribute">
+                    <method name="GET" id="findRefByAttribute">
+                        <doc>
+                            Осуществляет поиск элемента по значению реквизита. Примечание: Если
+                            существует несколько элементов с указанным значением реквизита, то будет
+                            найдет только один из них. Для реквизитов типа Строка поиск
+                            осуществляется по точному соответствию
+                        </doc>
+                        <request>
+                            <param name="attributeName" type="xsd:string" style="query">
+                                <doc>
+                                    Имя реквизита, как он задан в конфигураторе, по значению
+                                    которого осуществляется поиск.
+                                </doc>
+                            </param>
+                            <param name="attributeValue" type="xsd:string" style="query">
+                                <doc>
+                                    Значение реквизита, по которому должен выполняться поиск
+                                </doc>
+                            </param>
+                            <param name="attributeValueRef" type="xsd:string" style="query">
+                                <doc>
+                                    Для поиска по аттрибуту, значением которого является ссылка на объект,необъодимо передавать тип объекта,
+                                    например CatalogRef.Организации.
+                                    При этом в attributeValue должен быть UUID объекта.
+                                </doc>
+                            </param>
+                        </request>
+                        <response status="200">
+                            <representation mediaType="text/plain" element="core:UUIDType">
+                                <doc>UUID of found object</doc>
+                            </representation>
+                        </response>
+                    </method>
+                </resource>
+                <resource path="findByCode">
+                    <method name="GET" id="findByCode">
+                        <doc>
+                            Осуществляет поиск элемента по его коду
+                        </doc>
+                        <request>
+                            <param name="code" type="xsd:string" style="query">
+                                <doc>
+                                    Искомый код.
+                                </doc>
+                            </param>
+                        </request>
+                        <response status="200">
+                            <representation mediaType="application/xml" />
+                        </response>
+                    </method>
+                </resource>                
                 <resource path="findByDescription">
                     <method name="GET" id="findByDescription">
                         <doc>
@@ -154,6 +215,10 @@
                         </request>
                         <response status="204"/>
                     </method>
+                    <method name="DELETE" id="remove">
+                        <doc>remove catalog instance</doc>
+                        <response status="204"/>
+                    </method>
                 </resource>                
             </resource>
         </resource>
@@ -184,6 +249,16 @@
                                 или удаления данных будет производиться минимум проверок, так как 
                                 при этом делается предположение, что производится запись данных, 
                                 полученных через механизмы обмена данными, и эти данные корректны.
+                            </doc>
+                        </param>
+                        <param name="writeMode" type="enterprise:DocumentWriteMode" default="Write" style="query">
+                            <doc>
+                                Позволяет выбрать один из возможных режимов записи. (Значение по умолчанию: Запись )
+                            </doc>
+                        </param>
+                        <param name="postingMode" type="enterprise:DocumentPostingMode" default="Regular" style="query">
+                            <doc>
+                                Позволяет выбрать один из возможных режимов проведения. Значение по умолчанию: Неоперативный (Regular)
                             </doc>
                         </param>
                         <representation mediaType="application/xml" />
@@ -224,6 +299,16 @@
                                     полученных через механизмы обмена данными, и эти данные корректны.
                                 </doc>
                             </param>
+                            <param name="writeMode" type="enterprise:DocumentWriteMode" style="query">
+                                <doc>
+                                    Позволяет выбрать один из возможных режимов записи. (Значение по умолчанию: Запись )
+                                </doc>
+                            </param>
+                            <param name="postingMode" type="enterprise:DocumentPostingMode" style="query">
+                                <doc>
+                                    Позволяет выбрать один из возможных режимов проведения. Значение по умолчанию: Неоперативный (Regular)
+                                </doc>
+                            </param>
                             <representation mediaType="application/xml" />
                         </request>
                         <response status="204"/>
@@ -235,5 +320,26 @@
                 </resource>
             </resource>
         </resource>
+        <resource path="informationregisters" id="ru.ilb.xdtoservices.api.InformationRegistersResource">
+            <method name="POST" id="create">
+                <doc>Создать/обновить регистр сведений</doc>
+                <request>
+                    <representation mediaType="application/xml" />
+                </request>
+                <response status="204"/>
+            </method>
+            
+            <resource path="{registerName}">
+                <param name="registerName" type="xsd:string" style="template">
+                    <doc>register name</doc>
+                </param>
+                <method name="GET" id="list">
+                    <doc>get register contents</doc>
+                    <response status="200">
+                        <representation mediaType="application/xml" />
+                    </response>
+                </method>
+            </resource>
+        </resource>        
     </resources>
 </application> 
