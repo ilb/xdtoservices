@@ -89,7 +89,11 @@ public class XmlMergeImpl {
                             throw new IllegalArgumentException("Неизвестный элемент " + elementPatch.getNodeName()+ "\nstrBase="+strBase + " \nstrPatch="+strPatch);
                         }
                         // patch -> base
-                        elementsBase.get(elementPatch.getNodeName()).setTextContent(elementPatch.getTextContent());
+                        Element el=elementsBase.get(elementPatch.getNodeName());
+                        Node nodeCopy = docBase.importNode(elementPatch, true);
+                        el.getParentNode().insertBefore(nodeCopy, el);
+                        el.getParentNode().removeChild(el);
+                        //elementsBase.get(elementPatch.getNodeName()).setTextContent(elementPatch.getTextContent());
 
                         //Node book = (Node) xpath.evaluate("//book[author='Neal Stephenson']", docBase, XPathConstants.NODE);                        // не табличная часть, найдем такой узел в оригинале
                         //NodeList nodesBase = docBase.getDocumentElement().getElementsByTagName(strBase);

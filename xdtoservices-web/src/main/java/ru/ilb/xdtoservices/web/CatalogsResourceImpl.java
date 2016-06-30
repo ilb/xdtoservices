@@ -23,12 +23,20 @@ import com.ipc.oce.objects.OCCatalogManager;
 import com.ipc.oce.objects.OCCatalogObject;
 import com.ipc.oce.objects.OCCatalogRef;
 import com.ipc.oce.objects.OCCatalogSelection;
+import com.ipc.oce.objects.OCDocumentManager;
+import com.ipc.oce.objects.OCDocumentRef;
+import com.ipc.oce.objects.OCUUID;
 import com.ipc.oce.objects._OCCommonObject;
+import com.ipc.oce.objects._OCCommonRef;
 import com.ipc.oce.xml.oc.OCXDTOSerializer;
 import com.ipc.oce.xml.oc.OCXMLReader;
 import com.ipc.oce.xml.oc.OCXMLWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.Path;
 import org.jinterop.dcom.common.JIException;
 import org.jinterop.dcom.impls.automation.JIAutomationException;
@@ -165,11 +173,27 @@ public class CatalogsResourceImpl implements CatalogsResource {
     }
 
     @Override
-    public String findByAttribute(String catalogName, String attributeName, String attributeValue) {
+    public String findByAttribute(String catalogName, String attributeName, String attributeValue, String attributeValueRef) {
         try {
             OCApp app = applicationPool.getApplication();
             OCCatalogManager catalogManager = app.getCatalogManager(catalogName);
-            OCCatalogRef catalogObjectRef = catalogManager.findByAttribute(attributeName, new OCVariant(attributeValue), null, null);
+            OCVariant ocAttributeValue;
+            if (attributeValueRef == null) {
+                ocAttributeValue = new OCVariant(attributeValue);
+            } else {
+                OCUUID ocuuid = app.createUUID(attributeValue);
+                _OCCommonRef ref;
+                try {
+                    Object manager = app.findManager(attributeValueRef); // named data object
+                    Method method = manager.getClass().getMethod("getRef", OCUUID.class);
+                    ref = (_OCCommonRef) method.invoke(manager, ocuuid);
+                } catch (Throwable ex) {
+                    throw new RuntimeException(ex);
+                }
+                ocAttributeValue = new OCVariant(ref);
+            }
+
+            OCCatalogRef catalogObjectRef = catalogManager.findByAttribute(attributeName, ocAttributeValue, null, null);
             String result = null;
             if (!catalogObjectRef.isEmpty()) {
 
@@ -190,14 +214,47 @@ public class CatalogsResourceImpl implements CatalogsResource {
             throw new RuntimeException(ex);
         }
     }
+    @Override
+    public UUID findRefByAttribute(String catalogName, String attributeName, String attributeValue, String attributeValueRef) {
+        try {
+            OCApp app = applicationPool.getApplication();
+            OCCatalogManager catalogManager = app.getCatalogManager(catalogName);
+            OCVariant ocAttributeValue;
+            if (attributeValueRef == null) {
+                ocAttributeValue = new OCVariant(attributeValue);
+            } else {
+                OCUUID ocuuid = app.createUUID(attributeValue);
+                _OCCommonRef ref;
+                try {
+                    Object manager = app.findManager(attributeValueRef); // named data object
+                    Method method = manager.getClass().getMethod("getRef", OCUUID.class);
+                    ref = (_OCCommonRef) method.invoke(manager, ocuuid);
+                } catch (Throwable ex) {
+                    throw new RuntimeException(ex);
+                }
+                ocAttributeValue = new OCVariant(ref);
+            }
+
+            OCCatalogRef catalogObjectRef = catalogManager.findByAttribute(attributeName, ocAttributeValue, null, null);
+            UUID result = null;
+            if (!catalogObjectRef.isEmpty()) {
+                result = UUID.fromString(catalogObjectRef.getUUID().toString());
+            }
+            return result;
+        } catch (JIAutomationException ex) {
+            throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
+        } catch (JIException | IOException | ConfigurationException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
     @Override
     public void edit(String catalogName, UUID uid, String string) {
         try {
             OCApp app = applicationPool.getApplication();
             String baseXml = find(catalogName, uid);
-            if(baseXml==null){
-                baseXml=getTemplate(catalogName);
+            if (baseXml == null) {
+                baseXml = getTemplate(catalogName);
             }
             String patchedXml = xmlMergeImpl.mergeXml(baseXml, string);
 
@@ -251,7 +308,7 @@ public class CatalogsResourceImpl implements CatalogsResource {
             OCCatalogRef catalogObjectRef = catalogManager.findByDescription(description);;
             UUID result = null;
             if (!catalogObjectRef.isEmpty()) {
-                result=UUID.fromString(catalogObjectRef.getUUID().toString());
+                result = UUID.fromString(catalogObjectRef.getUUID().toString());
             }
 
             return result;
@@ -262,4 +319,50 @@ public class CatalogsResourceImpl implements CatalogsResource {
             throw new RuntimeException(ex);
         }
     }
+
+    @Override
+    public String findByCode(String catalogName, String code) {
+        try {
+            OCApp app = applicationPool.getApplication();
+            OCCatalogManager catalogManager = app.getCatalogManager(catalogName);
+            OCCatalogRef catalogObjectRef = catalogManager.findByCode(code);;
+            String result = null;
+            if (!catalogObjectRef.isEmpty()) {
+
+                OCXDTOSerializer serializer = app.getXDTOSerializer();
+                OCXMLWriter writer = app.newXMLWriter();
+                writer.setString("UTF-8");
+
+                serializer.writeXML(writer, catalogObjectRef.getObject());
+
+                result = writer.close();
+            }
+
+            return result;
+
+        } catch (JIAutomationException ex) {
+            throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
+        } catch (JIException | IOException | ConfigurationException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public void remove(String catalogName, UUID uid) {
+        try {
+            OCApp app = applicationPool.getApplication();
+            OCCatalogManager catalogManager = app.getCatalogManager(catalogName);
+            OCCatalogRef catalogRef = catalogManager.getRef(app.createUUID(uid.toString()));
+            if (!catalogRef.toString().contains("Объект не найден")) { //FIXME
+                OCCatalogObject catalogObject = catalogRef.getObject();
+                catalogObject.delete();
+            }
+
+        } catch (JIAutomationException ex) {
+            throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
+        } catch (JIException | IOException | ConfigurationException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
 }
