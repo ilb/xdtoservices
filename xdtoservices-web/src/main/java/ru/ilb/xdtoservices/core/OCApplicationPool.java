@@ -85,8 +85,11 @@ public class OCApplicationPool {
 
         return sessionCode;
     }
-
     protected void destroy() {
+        exit();
+    }
+
+    public void exit() {
         if (sessionID != -1) {
             try {
                 OCApp.getInstance(sessionID).exit();
