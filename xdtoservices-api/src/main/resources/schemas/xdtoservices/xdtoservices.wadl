@@ -341,5 +341,17 @@
                 </method>
             </resource>
         </resource>        
+        <resource path="session">
+            <resource path="logout">
+                <method name="POST" id="logout">
+                    <request>
+                    </request>
+                    <response status="200">
+                        <representation mediaType="text/plain" />
+                    </response>
+                </method>
+            </resource>
+        </resource>
+        
     </resources>
 </application> 
