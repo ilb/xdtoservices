@@ -124,6 +124,7 @@
         <property name="mailTo" value="${SERVER_ADMIN}"/>
     </bean>
     <!-- inbound request logging -->
+    <bean id="encodingInterceptor" class="ru.ilb.xdtoservices.jaxrs.EncodingInterceptor"/>
     <bean id="logInbound" class="org.apache.cxf.interceptor.LoggingInInterceptor"/>
     <bean id="logOutbound" class="org.apache.cxf.interceptor.LoggingOutInterceptor"/>
 
@@ -145,8 +146,9 @@
         </jaxrs:features>
         <jaxrs:inInterceptors>
             <!-- uncomment to enable inbound request logging -->
-<!--            <ref bean="logInbound"/>
-            <ref bean="logOutbound"/>-->
+            <ref bean="encodingInterceptor"/>
+            <ref bean="logInbound"/>
+            <!--<ref bean="logOutbound"/>-->
         </jaxrs:inInterceptors>
         
         <jaxrs:extensionMappings>
