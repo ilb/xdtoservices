@@ -1,1 +1,4 @@
-HTTP 405 Method Not Allowed
+Ошибка преобразования данных XDTO:
+НачалоСвойства: {http://v8.1c.ru/8.1/data/enterprise/current-config}InformationRegisterRecordSet.ДокументыФизическихЛиц	Форма: Элемент	Тип: {http://v8.1c.ru/8.1/data/enterprise/current-config}InformationRegisterRecordSet.ДокументыФизическихЛиц
+Ошибка преобразования данных XDTO:
+НачалоСвойства: Value	Форма: Элемент	Тип: {http://www.w3.org/2001/XMLSchema}anyType [ 
