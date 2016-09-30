@@ -23,8 +23,6 @@ import com.ipc.oce.objects.OCCatalogManager;
 import com.ipc.oce.objects.OCCatalogObject;
 import com.ipc.oce.objects.OCCatalogRef;
 import com.ipc.oce.objects.OCCatalogSelection;
-import com.ipc.oce.objects.OCDocumentManager;
-import com.ipc.oce.objects.OCDocumentRef;
 import com.ipc.oce.objects.OCUUID;
 import com.ipc.oce.objects._OCCommonObject;
 import com.ipc.oce.objects._OCCommonRef;
@@ -32,11 +30,8 @@ import com.ipc.oce.xml.oc.OCXDTOSerializer;
 import com.ipc.oce.xml.oc.OCXMLReader;
 import com.ipc.oce.xml.oc.OCXMLWriter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ws.rs.Path;
 import org.jinterop.dcom.common.JIException;
 import org.jinterop.dcom.impls.automation.JIAutomationException;
@@ -59,7 +54,7 @@ public class CatalogsResourceImpl implements CatalogsResource {
 
     @Autowired
     XmlMergeImpl xmlMergeImpl;
-
+    
     @Override
     public String list(String catalogName) {
 
