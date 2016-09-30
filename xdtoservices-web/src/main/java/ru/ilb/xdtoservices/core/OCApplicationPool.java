@@ -85,6 +85,7 @@ public class OCApplicationPool {
 
         return sessionCode;
     }
+
     protected void destroy() {
         exit();
     }
