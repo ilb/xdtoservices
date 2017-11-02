@@ -15,7 +15,9 @@
         <maven-source-plugin.version>2.4</maven-source-plugin.version>
         <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-        <ilb-common.version>1.7</ilb-common.version>
+        <ilb-common.version>1.19</ilb-common.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <licenses>
         <license>

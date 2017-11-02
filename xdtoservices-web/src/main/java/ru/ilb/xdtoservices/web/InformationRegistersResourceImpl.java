@@ -34,9 +34,10 @@ import ru.ilb.xdtoservices.core.OCApplicationPool;
 
 @Path("informationregisters")
 public class InformationRegistersResourceImpl implements InformationRegistersResource {
+
     @Autowired
     OCApplicationPool applicationPool;
-    
+
     @Override
     public String list(String registerName) {
         try {
@@ -44,7 +45,7 @@ public class InformationRegistersResourceImpl implements InformationRegistersRes
             OCXDTOSerializer serializer = app.getXDTOSerializer();
             OCInformationRegisterCollection collection = app.getInformationRegisterCollection();
             OCInformationRegisterManager regManager = collection.getInformationRegister(registerName);
-            OCStructure filter=regManager.createEmptyStruct();
+            OCStructure filter = regManager.createEmptyStruct();
 //            OCCatalogManager contrManager = app.getCatalogManager("ФизическиеЛица");
 //            OCCatalogRef cont=contrManager.getRef(app.createUUID("d7f8f042-33a9-11e6-a9e1-08002711c175"));
 //            filter.insert("Физлицо", cont);
@@ -54,12 +55,12 @@ public class InformationRegistersResourceImpl implements InformationRegistersRes
 //                System.out.println("stop factor: " + stopFactor);
 //                System.out.println("\tLineNumber: " + selection.getLineNumber());
 //                System.out.println("\tВидДокумента: " + selection.getDimension("ВидДокумента"));
-//                
+//
 //                System.out.println("\tСерия: " + selection.getResource("Серия"));
 //                System.out.println("\tНомер: " + selection.getResource("Номер"));
-//                
+//
 //                System.out.println("\tRecorder: " + selection.getRecorder());
-//            }   
+//            }
 //            //System.out.println("Selection size: " + selection.size()); // never call it
 //            System.out.println("===============================================\n");
 //            OCInformationRegisterRecordSet rs=regManager.createRecordSet();
@@ -81,22 +82,22 @@ public class InformationRegistersResourceImpl implements InformationRegistersRes
 String xml2            = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns0:InformationRegisterRecordSet.ДокументыФизическихЛиц xmlns:ns0=\"http://v8.1c.ru/8.1/data/enterprise/current-config\" xmlns:ns2=\"http://v8.1c.ru/8.1/data/enterprise\" xmlns:ns1=\"http://v8.1c.ru/8.1/data/core\"><ns0:Filter><ns2:FilterItem><ns2:Name>Физлицо</ns2:Name><ns2:Value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"ns0:CatalogRef.ФизическиеЛица\">d7f8f042-33a9-11e6-a9e1-08002711c175</ns2:Value></ns2:FilterItem></ns0:Filter></ns0:InformationRegisterRecordSet.ДокументыФизическихЛиц>";
             //rs.getRecord(0).setAttribute("Номер", new OCVariant("444222"));
             //rs.write(true);
-            
+
             OCXMLReader reader = app.newXMLReader();
             reader.setString(xml2);
-            
+
             OCObject object = serializer.readXML(reader);
-            OCInformationRegisterRecordSet commonObject = new OCInformationRegisterRecordSet(object);            
+            OCInformationRegisterRecordSet commonObject = new OCInformationRegisterRecordSet(object);
             commonObject.read();
             String res = serializer.writeXML(commonObject);
-            
+
             return res;
 
         } catch (JIAutomationException ex) {
             throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
         } catch (JIException | IOException | ConfigurationException ex) {
             throw new RuntimeException(ex);
-        }    
+        }
     }
 
     @Override
@@ -104,12 +105,12 @@ String xml2            = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns0:Informa
         try {
             OCApp app = applicationPool.getApplication();
             OCXDTOSerializer serializer = app.getXDTOSerializer();
-            
+
             OCXMLReader reader = app.newXMLReader();
             reader.setString(string);
-            
+
             OCObject object = serializer.readXML(reader);
-            OCInformationRegisterRecordSet commonObject = new OCInformationRegisterRecordSet(object);            
+            OCInformationRegisterRecordSet commonObject = new OCInformationRegisterRecordSet(object);
             commonObject.write();
             //String res = serializer.writeXML(commonObject);
 
@@ -117,7 +118,7 @@ String xml2            = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns0:Informa
             throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
         } catch (JIException | IOException | ConfigurationException ex) {
             throw new RuntimeException(ex);
-        }    
+        }
     }
-    
+
 }

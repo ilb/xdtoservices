@@ -25,8 +25,8 @@ import ru.ilb.xdtoservices.core.OCApplicationPool;
  */
 @Component
 class CatalogsResourceIntr {
+
     @Autowired
     OCApplicationPool applicationPool;
-    
-    
+
 }

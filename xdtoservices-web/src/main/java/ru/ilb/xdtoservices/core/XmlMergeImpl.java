@@ -86,10 +86,10 @@ public class XmlMergeImpl {
                         // не табличная часть
                         //System.out.println(element.getNodeName() + " = " + element.getTextContent());
                         if (!elementsBase.containsKey(elementPatch.getNodeName())) {
-                            throw new IllegalArgumentException("Неизвестный элемент " + elementPatch.getNodeName()+ "\nstrBase="+strBase + " \nstrPatch="+strPatch);
+                            throw new IllegalArgumentException("Неизвестный элемент " + elementPatch.getNodeName() + "\nstrBase=" + strBase + " \nstrPatch=" + strPatch);
                         }
                         // patch -> base
-                        Element el=elementsBase.get(elementPatch.getNodeName());
+                        Element el = elementsBase.get(elementPatch.getNodeName());
                         Node nodeCopy = docBase.importNode(elementPatch, true);
                         el.getParentNode().insertBefore(nodeCopy, el);
                         el.getParentNode().removeChild(el);
@@ -97,12 +97,12 @@ public class XmlMergeImpl {
 
                         //Node book = (Node) xpath.evaluate("//book[author='Neal Stephenson']", docBase, XPathConstants.NODE);                        // не табличная часть, найдем такой узел в оригинале
                         //NodeList nodesBase = docBase.getDocumentElement().getElementsByTagName(strBase);
-                    } else { //табличная часть, заменим целиком 
+                    } else { //табличная часть, заменим целиком
                         Element firstElBase = null;
                         if (elementsBase.containsKey(elementPatch.getNodeName())) {
                             firstElBase = elementsBase.get(elementPatch.getNodeName());
                             //все пометим для удаления
-                            for (Element el = firstElBase; el!=null && el.getNodeName().equals(elementPatch.getNodeName()); el = getNextElementSibling(el)) {
+                            for (Element el = firstElBase; el != null && el.getNodeName().equals(elementPatch.getNodeName()); el = getNextElementSibling(el)) {
                                 elementsForRemove.add(el);
                             }
                         }
@@ -116,7 +116,7 @@ public class XmlMergeImpl {
                 }
             }
             //удалим замененные узлы
-            for (Element el:elementsForRemove){
+            for (Element el : elementsForRemove) {
                 el.getParentNode().removeChild(el);
             }
             Transformer transformer = TransformerFactory.newInstance().newTransformer();

@@ -26,17 +26,17 @@ import org.apache.cxf.phase.Phase;
  */
 public class EncodingInterceptor extends AbstractPhaseInterceptor<Message> {
 
-        public EncodingInterceptor() {
-                super(Phase.RECEIVE);
-        }
+    public EncodingInterceptor() {
+        super(Phase.RECEIVE);
+    }
 
-        @Override
-        public void handleMessage(Message message) throws Fault {
-                String encoding = (String) message.get(Message.ENCODING);
-               
-                if (encoding == null || !encoding.equals("UTF-8")) {
-                        message.put(Message.ENCODING, "UTF-8");
-                }
-        }
+    @Override
+    public void handleMessage(Message message) throws Fault {
+        String encoding = (String) message.get(Message.ENCODING);
 
-} 
+        if (encoding == null || !encoding.equals("UTF-8")) {
+            message.put(Message.ENCODING, "UTF-8");
+        }
+    }
+
+}

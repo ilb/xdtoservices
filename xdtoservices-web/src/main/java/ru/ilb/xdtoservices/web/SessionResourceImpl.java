@@ -23,6 +23,7 @@ import ru.ilb.xdtoservices.core.OCApplicationPool;
 
 @Path("session")
 public class SessionResourceImpl implements SessionResource {
+
     @Autowired
     OCApplicationPool applicationPool;
 
@@ -31,5 +32,5 @@ public class SessionResourceImpl implements SessionResource {
         applicationPool.exit();
         return Response.ok("OK").build();
     }
-    
+
 }

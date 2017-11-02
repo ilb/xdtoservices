@@ -30,30 +30,32 @@ import ru.ilb.xdtoservices.core.OCApplicationPool;
 
 @Path("metadata")
 public class MetadataResourceImpl implements MetadataResource {
+
     @Autowired
     OCApplicationPool applicationPool;
 
     @Override
     public String exportXMLSchema(String uriNamespace) {
+
         try {
             OCApp app = applicationPool.getApplication();
-            OCXDTOFactory factory=app.getXDTOFactory();
-            String result="";
-            if(uriNamespace==null){
-                uriNamespace=factory.getCurrentConfigURI();
+            OCXDTOFactory factory = app.getXDTOFactory();
+            String result = "";
+            if (uriNamespace == null) {
+                uriNamespace = factory.getCurrentConfigURI();
             }
-            OCXMLSchemaSet schemaSet=factory.exportXMLSchema(uriNamespace);
-            OCXMLSchema schema=schemaSet.getSchema(0);
-            result=schema.getSchemaAsString();
-            
+            OCXMLSchemaSet schemaSet = factory.exportXMLSchema(uriNamespace);
+            OCXMLSchema schema = schemaSet.getSchema(0);
+            result = schema.getSchemaAsString();
+
             //factory.exportXMLSchema(uriNamespaces);
             return result;
-            
+
         } catch (JIAutomationException ex) {
             throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
         } catch (JIException | IOException | ConfigurationException ex) {
             throw new RuntimeException(ex);
         }
     }
-    
+
 }

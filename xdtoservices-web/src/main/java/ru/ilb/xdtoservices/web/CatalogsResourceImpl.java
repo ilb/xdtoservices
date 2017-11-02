@@ -54,7 +54,7 @@ public class CatalogsResourceImpl implements CatalogsResource {
 
     @Autowired
     XmlMergeImpl xmlMergeImpl;
-    
+
     @Override
     public String list(String catalogName) {
 
@@ -152,7 +152,7 @@ public class CatalogsResourceImpl implements CatalogsResource {
 //            OCXDTOObjectType type=factory.createObjectType(factory.getCurrentConfigURI(), "CatalogObject."+ catalogName);
 //            OCXDTODataObject dataObject = factory.readXML(string, type);
 //            //OCXDTODataObject dataObject = factory.createDataObject(type);
-//            
+//
 //            //OCObject object = serializer.readXML(reader);
 //            OCVariant objectv = serializer.readXDTO(dataObject);
             OCObject object = serializer.readXML(reader);
@@ -209,6 +209,7 @@ public class CatalogsResourceImpl implements CatalogsResource {
             throw new RuntimeException(ex);
         }
     }
+
     @Override
     public UUID findRefByAttribute(String catalogName, String attributeName, String attributeValue, String attributeValueRef) {
         try {

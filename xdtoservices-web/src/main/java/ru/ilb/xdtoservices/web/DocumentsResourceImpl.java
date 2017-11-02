@@ -96,15 +96,15 @@ public class DocumentsResourceImpl implements DocumentsResource {
             if (Boolean.TRUE.equals(load)) {
                 commonObject.getDataExchange().setLoad(Boolean.TRUE);
             }
-            StaticFieldInstance sfWriteMode=null;
-            if(writeMode!=null){
-                sfWriteMode=app.getStaticFields("DocumentWriteMode."+writeMode.value());
+            StaticFieldInstance sfWriteMode = null;
+            if (writeMode != null) {
+                sfWriteMode = app.getStaticFields("DocumentWriteMode." + writeMode.value());
             }
-            StaticFieldInstance sfPostingMode=null;
-            if(postingMode!=null){
-                sfPostingMode=app.getStaticFields("DocumentPostingMode."+postingMode.value());
+            StaticFieldInstance sfPostingMode = null;
+            if (postingMode != null) {
+                sfPostingMode = app.getStaticFields("DocumentPostingMode." + postingMode.value());
             }
-            commonObject.write(sfWriteMode,sfPostingMode);
+            commonObject.write(sfWriteMode, sfPostingMode);
             return UUID.fromString(commonObject.getRef().getUUID().toString());
         } catch (JIAutomationException ex) {
             throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
@@ -145,8 +145,8 @@ public class DocumentsResourceImpl implements DocumentsResource {
         try {
             OCApp app = applicationPool.getApplication();
             String baseXml = find(documentName, uid);
-            if(baseXml==null){ 
-                baseXml=getTemplate(documentName);
+            if (baseXml == null) {
+                baseXml = getTemplate(documentName);
             }
             String patchedXml = xmlMergeImpl.mergeXml(baseXml, string);
 
@@ -159,16 +159,16 @@ public class DocumentsResourceImpl implements DocumentsResource {
             if (Boolean.TRUE.equals(load)) {
                 commonObject.getDataExchange().setLoad(Boolean.TRUE);
             }
-            StaticFieldInstance sfWriteMode=null;
-            if(writeMode!=null){
-                sfWriteMode=app.getStaticFields("DocumentWriteMode."+writeMode.value());
+            StaticFieldInstance sfWriteMode = null;
+            if (writeMode != null) {
+                sfWriteMode = app.getStaticFields("DocumentWriteMode." + writeMode.value());
             }
-            StaticFieldInstance sfPostingMode=null;
-            if(postingMode!=null){
-                sfPostingMode=app.getStaticFields("DocumentPostingMode."+postingMode.value());
+            StaticFieldInstance sfPostingMode = null;
+            if (postingMode != null) {
+                sfPostingMode = app.getStaticFields("DocumentPostingMode." + postingMode.value());
             }
-            
-            commonObject.write(sfWriteMode,sfPostingMode);
+
+            commonObject.write(sfWriteMode, sfPostingMode);
         } catch (JIAutomationException ex) {
             throw new RuntimeException(ex.getExcepInfo().getExcepDesc());
         } catch (JIException | IOException | ConfigurationException ex) {
