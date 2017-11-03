@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.ilb.xdtoservices</groupId>
     <artifactId>xdtoservices</artifactId>
-    <version>1.4</version>
+    <version>1.5-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>xdtoservices</name>
     <description>Example Rest JPA application</description>
