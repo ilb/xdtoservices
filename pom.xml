@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.ilb.xdtoservices</groupId>
     <artifactId>xdtoservices</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4</version>
     <packaging>pom</packaging>
     <name>xdtoservices</name>
     <description>Example Rest JPA application</description>
@@ -36,7 +36,7 @@
     <scm>
         <connection>scm:git:https://github.com/ilb/xdtoservices.git</connection>
         <url>https://github.com/ilb/xdtoservices</url>
-        <tag>HEAD</tag>
+        <tag>xdtoservices-1.4</tag>
     </scm>
     <distributionManagement>
         <snapshotRepository>
