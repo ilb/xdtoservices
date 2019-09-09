@@ -26,7 +26,7 @@
             <version>${apache-cxf.version}</version>
             <scope>compile</scope>
         </dependency>-->
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>ru.ilb.basicuuid</groupId>
             <artifactId>basicuuid-api</artifactId>
             <version>1.0</version>
@@ -167,7 +167,7 @@
                         <groupId>org.apache.cxf.xjcplugins</groupId>
                         <artifactId>cxf-xjc-javadoc</artifactId>
                         <version>3.0.5</version>
-                    </dependency>                    
+                    </dependency>
                     <!--                    <dependency>
                         <groupId>com.github.jaxb-xew-plugin</groupId>
                         <artifactId>jaxb-xew-plugin</artifactId>

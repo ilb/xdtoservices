@@ -31,7 +31,7 @@
     in local ${catalina.base}/conf/context.xml with value "true", example:
     <Environment name="refreshTemplates" value="true" type="java.lang.Boolean" override="false"/>
     Also checkbox "Copy Static Resources On Save" should be enabled in project options in Netbeans ("Run" tab).
-    
+
     <env-entry>
         <description>reload xslt templates on every request</description>
         <env-entry-name>refreshTemplates</env-entry-name>
@@ -78,5 +78,5 @@
         <env-entry-name>oce.1c.password</env-entry-name>
         <env-entry-type>java.lang.String</env-entry-type>
     </env-entry>
-    
+
 </web-app>

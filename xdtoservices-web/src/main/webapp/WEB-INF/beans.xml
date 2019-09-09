@@ -28,7 +28,7 @@
     <context:annotation-config/>
     <!--Activates @Configurable -->
     <context:spring-configured/>
-    
+
     <cache:annotation-driven mode="aspectj"/>
     <bean id="cacheBuilder" class="com.google.common.cache.CacheBuilder" factory-method="from">
         <constructor-arg value="maximumSize=500, expireAfterAccess=300s, expireAfterWrite=300s" />
@@ -36,8 +36,8 @@
     <bean id="cacheManager" class="org.springframework.cache.guava.GuavaCacheManager">
         <property name="cacheBuilder" ref="cacheBuilder"/>
     </bean>
-    
-    
+
+
     <!-- uncomment to enable AsyncTaskManager support -->
     <!--<bean id="asyncTaskManager" class="ru.ilb.common.jaxrs.async.AsyncTaskManager" destroy-method="destroy"/>-->
 
@@ -66,7 +66,7 @@
         <entry key="urn:ru:ilb:xdtoservices:xdtoservices" value="xdto"/>
     </util:map>
     <bean id="jaxbContextResolver" class="ru.ilb.common.jaxrs.jaxb.JaxbContextResolver" >
-<!--        <property name="contextProperties" ref="contextProperties"/>
+        <!--        <property name="contextProperties" ref="contextProperties"/>
         <property name="extraClass" ref="extraClass"/>-->
     </bean>
 
@@ -93,14 +93,14 @@
         <property name="marshalEmptyCollections" value="false"/>
         <!--<property name="schemaHandler" ref="schemaHandler"/>-->
     </bean>
-<!--    <bean id="schemaHandler" class="org.apache.cxf.jaxrs.utils.schemas.SchemaHandler">
+    <!--    <bean id="schemaHandler" class="org.apache.cxf.jaxrs.utils.schemas.SchemaHandler">
         <property name="catalogLocation" value="classpath:schemas/xdtoservices/catalog.xml"/>
         <property name="schemaLocations" ref="schemaLocations"/>
     </bean>-->
     <util:list id="schemaLocations">
         <value>classpath:schemas/xdtoservices/xdtoservices.xsd</value>
     </util:list>
-<!--    <util:list id="extraClass" value-type="java.lang.Class">
+    <!--    <util:list id="extraClass" value-type="java.lang.Class">
     </util:list>-->
 
     <util:map id="marshallerProperties">
@@ -150,7 +150,7 @@
             <ref bean="logInbound"/>
             <!--<ref bean="logOutbound"/>-->
         </jaxrs:inInterceptors>
-        
+
         <jaxrs:extensionMappings>
             <entry key="xml" value="application/xml;charset=UTF-8"/>
             <entry key="json" value="application/json;charset=UTF-8"/>

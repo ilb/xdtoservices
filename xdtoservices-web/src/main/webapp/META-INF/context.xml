@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context antiJARLocking="true" path="/xdtoservices-web">
-  <Loader loaderClass="org.springframework.instrument.classloading.tomcat.TomcatInstrumentableClassLoader"/>
-  <!--    <Resource auth="Container"
+    <Loader loaderClass="org.springframework.instrument.classloading.tomcat.TomcatInstrumentableClassLoader"/>
+    <!--    <Resource auth="Container"
               driverClassName="com.mysql.jdbc.Driver"
               logAbandoned="true"
               maxWait="20000"
@@ -13,12 +13,12 @@
               type="javax.sql.DataSource"
               url="jdbc:mysql://localhost:3306/xdtoservices?autoReconnect=true&amp;elideSetAutoCommits=true&amp;useLocalSessionState=true&amp;maintainTimeStats=false&amp;serverTimezone=Europe/Moscow"
     />-->
-  <Environment name="oce.driver" override="false" type="java.lang.String" value=""/>
-  <Environment name="oce.host" override="false" type="java.lang.String" value=""/>
-  <Environment name="oce.domain" override="false" type="java.lang.String" value=""/>
-  <Environment name="oce.host.user" override="false" type="java.lang.String" value=""/>
-  <Environment name="oce.host.password" override="false" type="java.lang.String" value=""/>
-  <Environment name="oce.1c.dbpath" override="false" type="java.lang.String" value=""/>
-  <Environment name="oce.1c.user" override="false" type="java.lang.String" value=""/>
-  <Environment name="oce.1c.password" override="false" type="java.lang.String" value=""/>
+    <Environment name="oce.driver" override="false" type="java.lang.String" value=""/>
+    <Environment name="oce.host" override="false" type="java.lang.String" value=""/>
+    <Environment name="oce.domain" override="false" type="java.lang.String" value=""/>
+    <Environment name="oce.host.user" override="false" type="java.lang.String" value=""/>
+    <Environment name="oce.host.password" override="false" type="java.lang.String" value=""/>
+    <Environment name="oce.1c.dbpath" override="false" type="java.lang.String" value=""/>
+    <Environment name="oce.1c.user" override="false" type="java.lang.String" value=""/>
+    <Environment name="oce.1c.password" override="false" type="java.lang.String" value=""/>
 </Context>

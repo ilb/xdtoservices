@@ -21,10 +21,10 @@
         <xjc:javaType name="java.util.Date" xmlType="xsd:date" adapter="ru.ilb.common.jaxb.adapters.DateXmlAdapter" />
         <xjc:javaType name="java.util.Date" xmlType="xsd:dateTime" adapter="ru.ilb.common.jaxb.adapters.DateTimeXmlAdapter" />
         <xjc:javaType name="java.util.UUID" xmlType="core:UUIDType" adapter="ru.ilb.common.jaxb.adapters.UUIDXmlAdapter" />
-        
+
     </jaxb:globalBindings>
-    
-<!--    <jaxb:bindings node="//xsd:complexType[@name='PeristentObjectType']">
+
+    <!--    <jaxb:bindings node="//xsd:complexType[@name='PeristentObjectType']">
         <jaxb:class implClass="ru.ilb.loanaccounting.core.PeristentObject"/>
     </jaxb:bindings>
     <jaxb:bindings node="//xsd:complexType[@name='EntityType']">

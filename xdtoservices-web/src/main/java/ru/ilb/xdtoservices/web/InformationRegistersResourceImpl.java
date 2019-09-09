@@ -67,19 +67,17 @@ public class InformationRegistersResourceImpl implements InformationRegistersRes
 //            OCFilter f=rs.getFilter();
 //            f.getItem("Физлицо").set(new OCVariant(cont),true);
             //f.getItem("Физлицо").setComparisonType(new EComparisonType(EComparisonType.EQUALS));
-            
-            
-            String xml1 = "<InformationRegisterRecordSet.ДокументыФизическихЛиц xmlns=\"http://v8.1c.ru/8.1/data/enterprise/current-config\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
-"	<Filter>\n" +
-"		<FilterItem xmlns=\"http://v8.1c.ru/8.1/data/enterprise\">\n" +
-//"			<Name xsi:type=\"xs:string\">Физлицо</Name>\n" +
 
-"			<Name>Физлицо</Name>\n" +
-//"			<Value>d7f8f042-33a9-11e6-a9e1-08002711c175</Value>\n" +
-"			<Value xmlns:d4p1=\"http://v8.1c.ru/8.1/data/enterprise/current-config\" xsi:type=\"d4p1:CatalogRef.ФизическиеЛица\">d7f8f042-33a9-11e6-a9e1-08002711c175</Value>\n" +"		</FilterItem>\n" +
-"	</Filter></InformationRegisterRecordSet.ДокументыФизическихЛиц>";
-            
-String xml2            = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns0:InformationRegisterRecordSet.ДокументыФизическихЛиц xmlns:ns0=\"http://v8.1c.ru/8.1/data/enterprise/current-config\" xmlns:ns2=\"http://v8.1c.ru/8.1/data/enterprise\" xmlns:ns1=\"http://v8.1c.ru/8.1/data/core\"><ns0:Filter><ns2:FilterItem><ns2:Name>Физлицо</ns2:Name><ns2:Value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"ns0:CatalogRef.ФизическиеЛица\">d7f8f042-33a9-11e6-a9e1-08002711c175</ns2:Value></ns2:FilterItem></ns0:Filter></ns0:InformationRegisterRecordSet.ДокументыФизическихЛиц>";
+            String xml1 = "<InformationRegisterRecordSet.ДокументыФизическихЛиц xmlns=\"http://v8.1c.ru/8.1/data/enterprise/current-config\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n"
+                    + "    <Filter>\n"
+                    + "        <FilterItem xmlns=\"http://v8.1c.ru/8.1/data/enterprise\">\n"
+                    + //"            <Name xsi:type=\"xs:string\">Физлицо</Name>\n" +
+                    "            <Name>Физлицо</Name>\n"
+                    + //"            <Value>d7f8f042-33a9-11e6-a9e1-08002711c175</Value>\n" +
+                    "            <Value xmlns:d4p1=\"http://v8.1c.ru/8.1/data/enterprise/current-config\" xsi:type=\"d4p1:CatalogRef.ФизическиеЛица\">d7f8f042-33a9-11e6-a9e1-08002711c175</Value>\n" + "        </FilterItem>\n"
+                    + "    </Filter></InformationRegisterRecordSet.ДокументыФизическихЛиц>";
+
+            String xml2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns0:InformationRegisterRecordSet.ДокументыФизическихЛиц xmlns:ns0=\"http://v8.1c.ru/8.1/data/enterprise/current-config\" xmlns:ns2=\"http://v8.1c.ru/8.1/data/enterprise\" xmlns:ns1=\"http://v8.1c.ru/8.1/data/core\"><ns0:Filter><ns2:FilterItem><ns2:Name>Физлицо</ns2:Name><ns2:Value xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"ns0:CatalogRef.ФизическиеЛица\">d7f8f042-33a9-11e6-a9e1-08002711c175</ns2:Value></ns2:FilterItem></ns0:Filter></ns0:InformationRegisterRecordSet.ДокументыФизическихЛиц>";
             //rs.getRecord(0).setAttribute("Номер", new OCVariant("444222"));
             //rs.write(true);
 
