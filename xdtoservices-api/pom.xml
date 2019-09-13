@@ -1,36 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>ru.ilb.xdtoservices</groupId>
         <artifactId>xdtoservices</artifactId>
         <version>1.6-SNAPSHOT</version>
     </parent>
-
     <artifactId>xdtoservices-api</artifactId>
     <packaging>jar</packaging>
-
     <name>xdtoservices-api</name>
-
     <dependencies>
         <dependency>
             <groupId>ru.ilb.common</groupId>
             <artifactId>common-jaxb</artifactId>
             <version>${ilb-common.version}</version>
         </dependency>
-        <!-- to debug sources only -->
-        <!--        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-wadl2java-plugin</artifactId>
-            <version>${apache-cxf.version}</version>
-            <scope>compile</scope>
-        </dependency>-->
-        <!--        <dependency>
-            <groupId>ru.ilb.basicuuid</groupId>
-            <artifactId>basicuuid-api</artifactId>
-            <version>1.0</version>
-        </dependency>-->
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
             <artifactId>jaxb2-basics-runtime</artifactId>
@@ -44,11 +28,9 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
     <properties>
         <jaxb2-basics.version>0.9.4</jaxb2-basics.version>
     </properties>
-
     <build>
         <finalName>${project.name}</finalName>
         <plugins>
@@ -70,35 +52,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--  uncomment to extract parts of artifacts, eg. episodes. add multiple <artifactItem> lines
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.1</version>
-                <executions>
-                    <execution>
-                        <id>unpack</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>ru.ilb.basicuuid</groupId>
-                                    <artifactId>basicuuid-api</artifactId>
-                                    <type>jar</type>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/schemas-build-root</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                            <includes>schemas/**</includes>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>true</overWriteSnapshots>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>-->
             <plugin>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-wadl2java-plugin</artifactId>
@@ -132,8 +85,6 @@
                                         <extraarg>-xjc-Xcopyable</extraarg>
                                         <extraarg>-xjc-Xsetters</extraarg>
                                         <extraarg>-xjc-Xsetters-mode=direct</extraarg>
-                                        <!--                                        <extraarg>-xjc-Xxew</extraarg>
-                                        <extraarg>-xjc-Xxew:instantiate lazy</extraarg>-->
                                         <extraarg>-xjc-Xfluent-api</extraarg>
                                         <extraarg>-xjc-enableIntrospection</extraarg>
                                         <extraarg>-xjc-episode</extraarg>
@@ -168,11 +119,6 @@
                         <artifactId>cxf-xjc-javadoc</artifactId>
                         <version>3.0.5</version>
                     </dependency>
-                    <!--                    <dependency>
-                        <groupId>com.github.jaxb-xew-plugin</groupId>
-                        <artifactId>jaxb-xew-plugin</artifactId>
-                        <version>1.4</version>
-                    </dependency>-->
                 </dependencies>
             </plugin>
         </plugins>
