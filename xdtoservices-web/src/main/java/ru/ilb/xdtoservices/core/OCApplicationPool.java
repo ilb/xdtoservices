@@ -70,6 +70,8 @@ public class OCApplicationPool {
             configuration.put(PropertiesReader.OCE_CFG_1CDB_PATH, (String) ctx.lookup(PropertiesReader.OCE_CFG_1CDB_PATH));
             configuration.put(PropertiesReader.OCE_CFG_1CDB_USER, (String) ctx.lookup(PropertiesReader.OCE_CFG_1CDB_USER));
             configuration.put(PropertiesReader.OCE_CFG_1CDB_PASSWORD, (String) ctx.lookup(PropertiesReader.OCE_CFG_1CDB_PASSWORD));
+            configuration.put(PropertiesReader.OCE_CFG_1CSRVR, (String) ctx.lookup(PropertiesReader.OCE_CFG_1CSRVR));
+            configuration.put(PropertiesReader.OCE_CFG_1CREF, (String) ctx.lookup(PropertiesReader.OCE_CFG_1CREF));
         } catch (NamingException ex) {
             throw new RuntimeException(ex);
         }
