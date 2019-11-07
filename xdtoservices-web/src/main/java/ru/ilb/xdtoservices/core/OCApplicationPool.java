@@ -67,7 +67,7 @@ public class OCApplicationPool {
             configuration.put(PropertiesReader.OCE_CFG_HOST, (String) ctx.lookup(PropertiesReader.OCE_CFG_HOST));
             configuration.put(PropertiesReader.OCE_CFG_HOST_USER, (String) ctx.lookup(PropertiesReader.OCE_CFG_HOST_USER));
             configuration.put(PropertiesReader.OCE_CFG_HOST_PASSWORD, (String) ctx.lookup(PropertiesReader.OCE_CFG_HOST_PASSWORD));
-            configuration.put(PropertiesReader.OCE_CFG_1CDB_PATH, (String) ctx.lookup(PropertiesReader.OCE_CFG_1CDB_PATH));
+//            configuration.put(PropertiesReader.OCE_CFG_1CDB_PATH, (String) ctx.lookup(PropertiesReader.OCE_CFG_1CDB_PATH));
             configuration.put(PropertiesReader.OCE_CFG_1CDB_USER, (String) ctx.lookup(PropertiesReader.OCE_CFG_1CDB_USER));
             configuration.put(PropertiesReader.OCE_CFG_1CDB_PASSWORD, (String) ctx.lookup(PropertiesReader.OCE_CFG_1CDB_PASSWORD));
             configuration.put(PropertiesReader.OCE_CFG_1CSRVR, (String) ctx.lookup(PropertiesReader.OCE_CFG_1CSRVR));
