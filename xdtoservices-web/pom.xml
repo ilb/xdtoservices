@@ -4,10 +4,10 @@
     <parent>
         <groupId>ru.ilb.xdtoservices</groupId>
         <artifactId>xdtoservices</artifactId>
-        <version>1.7-SNAPSHOT</version>
+        <version>1.7</version>
     </parent>
     <artifactId>xdtoservices-web</artifactId>
-    <version>1.7-SNAPSHOT</version>
+    <version>1.7</version>
     <packaging>war</packaging>
     <name>xdtoservices-web</name>
     <properties>
@@ -138,7 +138,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>xdtoservices-api</artifactId>
-            <version>1.7-SNAPSHOT</version>
+            <version>1.7</version>
         </dependency>
         <dependency>
             <groupId>ru.ilb.jinterbit</groupId>
