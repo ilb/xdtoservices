@@ -49,17 +49,6 @@
         <property name="replaceTags" value="true"/>
         <property name="prettyPrint" value="true"/>
     </bean>-->
-
-    <!-- Configure xslt support, see also web.xml for refreshTemplates env-entry
-    <bean id="uriResolver" class="ru.ilb.common.jaxrs.xml.transform.ServletContextURIResolver"/>
-    <bean id="xsltProvider" class="org.apache.cxf.jaxrs.provider.XSLTJaxbProvider" >
-        <property name="resolver" ref="uriResolver"/>
-        <property name="produceMediaTypes" value="application/xml,application/*+xml,text/xml,text/html,text/csv"/>
-        <property name="refreshTemplates">
-            <jee:jndi-lookup jndi-name="java:/comp/env/refreshTemplates" />
-        </property>
-    </bean>
-    -->
     <bean id="searchContextProvider" class="org.apache.cxf.jaxrs.ext.search.SearchContextProvider"/>
 
     <util:map id="namespaceMap" map-class="java.util.Hashtable">
