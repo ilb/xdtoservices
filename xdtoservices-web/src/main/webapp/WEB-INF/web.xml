@@ -26,19 +26,6 @@
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
     </resource-ref>
-    <!-- uncomment for xslt support, see also beans.xml for uriResolver and xsltProvider
-    To make xslt templates refresh on the fly, you need yo override variable refreshTemplates
-    in local ${catalina.base}/conf/context.xml with value "true", example:
-    <Environment name="refreshTemplates" value="true" type="java.lang.Boolean" override="false"/>
-    Also checkbox "Copy Static Resources On Save" should be enabled in project options in Netbeans ("Run" tab).
-
-    <env-entry>
-        <description>reload xslt templates on every request</description>
-        <env-entry-name>refreshTemplates</env-entry-name>
-        <env-entry-type>java.lang.Boolean</env-entry-type>
-        <env-entry-value>false</env-entry-value>
-    </env-entry>
-    -->
     <!-- uncomment for resource link
     <resource-env-ref>
         <description>workflow resource</description>
