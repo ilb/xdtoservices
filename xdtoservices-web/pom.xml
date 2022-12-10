@@ -15,7 +15,7 @@
         <mysql-connector.version>5.1.27</mysql-connector.version>
         <eclipselink.version>2.6.1</eclipselink.version>
         <javax-persistence.version>2.1.0</javax-persistence.version>
-        <org.springframework.version>4.2.4.RELEASE</org.springframework.version>
+        <org.springframework.version>6.0.0</org.springframework.version>
         <maven-JarWar-Plugin.Version>2.4</maven-JarWar-Plugin.Version>
     </properties>
     <dependencies>
